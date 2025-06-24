@@ -10,13 +10,17 @@
 </head>
 
 <body class="font-mono">
+    <!-- EN-TÊTE -->
     <header>
         <div id="logo-container">
             <img id="logo" src="./assets/images/favicon.png" alt="logo">
             <h1 id="title"> Tic tac toe </h1>
         </div>
     </header>
+
+    <!-- PAGE BODY -->
     <main class="min-h-screen">
+        <!-- MENU -->
         <aside x-data="{mno_open : true}" class="min-h-screen p-5" id="menu-container">
             <div class="mb-10 border-b-1 border-gray-300 py-2 flex justify-left">
                 <svg @click="mno_open = !mno_open" class="svg-icon cursor-pointer" viewBox="0 0 20 20">
@@ -124,13 +128,20 @@
                 </div>
             </div>
         </aside>
+
+        <!-- GAME BOARD -->
         <div class="min-h-screen p-5" id="game-container">
             Main
         </div>
+
     </main>
+
+    <!-- RODAPÉ -->
     <footer>
         FOOTER
     </footer>
+
+    <!-- UTILS -->
     <div id="spinner" class="hidden w-full h-screen top-0 left-0 bg-black opacity-50 flex gap-5 items-center justify-center">
         <img src="./assets/images/favicon.png" alt="spinner-icon" class="w-16 animate-spin">
         <p class="text-xl text-white">Loading...</p>
