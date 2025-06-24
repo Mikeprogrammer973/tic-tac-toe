@@ -5,24 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic Tac Toe</title>
     <link rel="shortcut icon" href="./assets/images/favicon.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="./assets/styles/index.css">
 </head>
 
 <body>
     <header>
-        <div>
-            <img src="" alt="logo">
-            <h1> Tic tac toe </h1>
+        <div id="logo-container">
+            <img id="logo" src="./assets/images/favicon.png" alt="logo">
+            <h1 id="title"> Tic tac toe </h1>
         </div>
     </header>
-    <nav>
 
-    </nav>
-    
-    <main>
-
-
-
+    <main class="min-h-screen">
+        <aside class="min-h-screen w-[20%] p-5" id="menu-container">
+            Menu
+        </aside>
+        <div class="min-h-screen w-[80%] p-5" id="game-container">
+            Main
+        </div>
     </main>
 
 
