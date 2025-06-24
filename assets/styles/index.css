@@ -19,7 +19,6 @@ header {
 
 #title {
     font-weight: bolder;
-    font-family: 'Courier New', Courier, monospace;
     font-size: x-large;
     color: rgb(175, 181, 193);
 }
@@ -35,5 +34,22 @@ main {
 }
 
 #game-container {
+}
+
+/* UTILS */
+.svg-icon {
+  width: 1.5em;
+  height: 1.5em;
+}
+
+.svg-icon path,
+.svg-icon polygon,
+.svg-icon rect {
+  fill: #4691f6;
+}
+
+.svg-icon circle {
+  stroke: #4691f6;
+  stroke-width: 1;
 }
 
