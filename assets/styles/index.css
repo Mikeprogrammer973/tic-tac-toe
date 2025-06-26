@@ -1,7 +1,12 @@
 /* HEADER STYLE */
-header {
+header, footer {
     padding: 10px 6px;
-    background-color: rgba(0, 0, 0, 0.817);
+    background-color: whitesmoke;
+}
+
+header {
+  position: sticky;
+  top: 0px;
 }
 
 #logo-container {
@@ -19,21 +24,37 @@ header {
 
 #title {
     font-weight: bolder;
-    font-family: 'Courier New', Courier, monospace;
     font-size: x-large;
-    color: rgb(175, 181, 193);
+    background-image: url('https://i.pinimg.com/236x/24/33/07/2433078e3a4c19e965057b38c56659d6.jpg');
 }
 
 /* MAIN STYLE */
 main {
-    background-color: rgb(99, 98, 98);
+    background-color: rgb(255, 255, 255);
     display: flex;
 }
 
 #menu-container {
-    background-color: #fff;
+    background-color: transparent;
 }
 
 #game-container {
+}
+
+/* UTILS */
+.svg-icon {
+  width: 1.5em;
+  height: 1.5em;
+}
+
+.svg-icon path,
+.svg-icon polygon,
+.svg-icon rect {
+  fill: #4691f6;
+}
+
+.svg-icon circle {
+  stroke: #4691f6;
+  stroke-width: 1;
 }
 
