@@ -43,5 +43,6 @@ export function config_navigation()
 {
     window.addEventListener("DOMContentLoaded", handle_navigation)
     window.addEventListener("hashchange", handle_current_navigation)
+    window.addEventListener("load", handle_current_navigation)
 }
 
