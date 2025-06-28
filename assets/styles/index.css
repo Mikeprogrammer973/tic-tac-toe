@@ -4,11 +4,6 @@ header, footer {
     background-color: rgb(0, 0, 0);
 }
 
-header {
-  position: sticky;
-  top: 0px;
-}
-
 #logo-container {
     display: flex;
     align-items: center;
