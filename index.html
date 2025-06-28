@@ -11,7 +11,7 @@
 
 <body class="font-mono bg-black">
     <!-- EN-TÊTE -->
-    <header class="shadow-md">
+    <header class="shadow-md z-50">
         <div id="logo-container">
             <img id="logo" src="./assets/images/favicon.png" alt="logo">
             <h1 class="hidden sm:flex bg-clip-text text-transparent" id="title"> Tic tac toe </h1>
@@ -19,7 +19,7 @@
     </header>
 
     <!-- PAGE BODY -->
-    <main class="min-h-screen">
+    <main class="min-h-screen z-40">
         <!-- MENU -->
         <aside x-data="{mno_open : true}" class="min-h-screen p-5" id="menu-container">
             <div class="mb-10 border-b-1 border-gray-300 py-2 flex justify-left">
@@ -150,12 +150,6 @@
                 class="px-10 py-4 rounded-full text-white bg-indigo-600 hover:bg-indigo-500 transition shadow-lg hover:shadow-indigo-500/50 font-semibold text-lg">
                     ▶️ Start Game
                 </button>
-
-                <p class="text-xs text-gray-500 pt-4">A game experience by <span class="text-white font-medium">
-                    <a href="https://github.com/Mikeprogrammer973">Mike</a>
-                    &
-                    <a href="https://github.com/ibrangonathan">Nathan</a>
-                </span></p>
             </div>
 
             <!-- AUTH FORM -->
