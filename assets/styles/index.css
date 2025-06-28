@@ -26,14 +26,6 @@ header, footer {
 /* MAIN STYLE */
 main {
     background-color: rgb(0, 0, 0);
-    display: flex;
-}
-
-#menu-container {
-    background-color: black;
-}
-
-#game-container {
 }
 
 /* UTILS */
