@@ -1,5 +1,5 @@
 export const routes = {
-   "profile": ["/pages/profile.html", "Profile"],
+   "profile": ["*", "Profile"],
    "home": ["*", "Home"],
    "new-pc-e": ["*", "vs PC | Easy"],
    "new-pc-m": ["*", "vs PC | Medium"],

@@ -1,0 +1,65 @@
+
+<div class="w-full max-w-md bg-gray-900 rounded-2xl shadow-2xl p-6 text-white space-y-6">
+    <!-- Tabs -->
+    <div class="flex justify-center gap-4 mb-10 pb-5 border-b-[1px] border-gray-700">
+        <button id="tab-signin"
+            class="tab-btn text-sm font-semibold px-4 py-2 rounded-xl transition duration-200 focus:outline-none bg-indigo-600">
+            Sign In
+        </button>
+        <button id="tab-signup"
+            class="tab-btn text-sm font-semibold px-4 py-2 rounded-xl transition duration-200 focus:outline-none bg-gray-800 hover:bg-gray-700">
+            Sign Up
+        </button>
+    </div>
+
+    <div class="space-y-6">
+        <!-- Sign In Form -->
+        <form id="form-signin" class="space-y-5">
+            <div>
+            <label for="signin-identifier" class="block mb-1 text-sm font-medium">Email or Username</label>
+            <input type="text" id="signin-identifier" required
+                class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-indigo-500 outline-none transition" />
+            </div>
+            <div>
+            <label for="signin-password" class="block mb-1 text-sm font-medium">Password</label>
+            <input type="password" id="signin-password" required
+                class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-indigo-500 outline-none transition" />
+            </div>
+            <div class="text-right text-sm">
+            <a href="#" class="text-indigo-400 hover:underline">Forgot password?</a>
+            </div>
+            <button type="submit"
+            class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition font-semibold">
+            Sign In
+            </button>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="form-signup" class="space-y-5 hidden">
+            <div>
+            <label for="signup-fullname" class="block mb-1 text-sm font-medium">Full Name</label>
+            <input type="text" id="signup-fullname" required
+                class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-indigo-500 outline-none transition" />
+            </div>
+            <div>
+            <label for="signup-email" class="block mb-1 text-sm font-medium">Email</label>
+            <input type="email" id="signup-email" required
+                class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-indigo-500 outline-none transition" />
+            </div>
+            <div>
+            <label for="signup-username" class="block mb-1 text-sm font-medium">Username</label>
+            <input type="text" id="signup-username" required
+                class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-indigo-500 outline-none transition" />
+            </div>
+            <div>
+            <label for="signup-password" class="block mb-1 text-sm font-medium">Password</label>
+            <input type="password" id="signup-password" required
+                class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-indigo-500 outline-none transition" />
+            </div>
+            <button type="submit"
+            class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition font-semibold">
+            Sign Up
+            </button>
+        </form>
+    </div>
+</div>

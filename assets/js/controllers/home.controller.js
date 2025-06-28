@@ -1,5 +1,19 @@
+import { globals } from "../utils/globals.js"
+import { home_auth_init } from "../utils/init.js"
+import { Render } from "../utils/render.js"
+import { controllers } from "./index.js"
 
-export default function home()
+export default async function home()
 {
-    console.log("HOME PAGE")
+    let page_dir = "/pages/home/welcome.html" 
+
+    let util = () => {}
+    
+    if(!new controllers.Auth().check())
+    {
+        page_dir = "/pages/home/auth_forms.html"
+        util = home_auth_init
+    }
+
+    await new Render().page(globals.game_board, page_dir, util)
 }

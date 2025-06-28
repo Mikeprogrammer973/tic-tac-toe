@@ -1,5 +1,5 @@
 
-export const home_init = () => {
+export const home_auth_init = () => {
     const signinTab = document.getElementById('tab-signin');
     const signupTab = document.getElementById('tab-signup');
     const signinForm = document.getElementById('form-signin');
