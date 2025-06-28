@@ -28,13 +28,6 @@ main {
     background-color: rgb(0, 0, 0);
 }
 
-#menu-container {
-    background-color: black;
-}
-
-#game-container {
-}
-
 /* UTILS */
 .svg-icon {
   width: 1.5em;
