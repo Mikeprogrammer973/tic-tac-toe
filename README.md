@@ -1,3 +1,3 @@
 # tic-tac-toe
 
-Ongoing preview: [text](https://tic-tac-toe-swart-ten.vercel.app/#/home)
+Ongoing preview: [Tic tac toe](https://tic-tac-toe-swart-ten.vercel.app/#/home)
