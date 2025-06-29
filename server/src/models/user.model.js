@@ -27,7 +27,7 @@ const userSchema = moongose.Schema({
               uri: {
                 type: String
               }
-            }
+            },
             default: {
               name: "",
               uri: ""
