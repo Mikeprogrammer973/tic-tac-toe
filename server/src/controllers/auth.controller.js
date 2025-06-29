@@ -6,16 +6,20 @@ import cloudinary from "../lib/cloudinary.js"
 
 
 export const signup = async (req, res) => {
-    const {fullName, email, password} = req.body
+    const {fullName, email, username, password} = req.body
     try {
         // valid data?
-        if(!fullName || !email || !password) return res.status(400).json({ message: "All fields are required!" })
+        if(!fullName || !email || !username || !password) return res.status(400).json({ message: "All fields are required!" })
         if(password.length < 10) return res.status(400).json({ message: "Password must be at least 10 characters!" }) 
         
         // existing user?
-        const user = await User.findOne({email: email})
+        let user = await User.findOne({email: email})
         
         if(user) return res.status(400).json({ message: "Email already in use!" }) 
+        
+        user = await User.findOne({username: username})
+        
+        if(user) return res.status(400).json({ message: "Username already in use!" }) 
 
         // hash password
         const hashed_pwd = bcryptjs.hashSync(password, bcryptjs.genSaltSync())
@@ -24,6 +28,7 @@ export const signup = async (req, res) => {
         const new_user = new User({
             fullName,
             email,
+            username,
             password: hashed_pwd
         })
 
@@ -38,7 +43,10 @@ export const signup = async (req, res) => {
                 _id: new_user._id,
                 fullName: new_user.fullName,
                 email: new_user.email,
-                profilePic: new_user.profilePic
+                username: new_user.username,
+                profilePic: new_user.profilePic,
+                games: new_user.games,
+                stats: new_user.stats
             })
         } else {
             res.status(400).json({ message: "Invalid user data!" }) 
@@ -72,7 +80,10 @@ export const signin = async (req, res) => {
             _id: user._id,
             fullName: user.fullName,
             email: user.email,
-            profilePic: user.profilePic
+            username: user.username,
+            profilePic: user.profilePic,
+            games: user.games,
+            stats: user.stats
         })
     } catch (error) {
         console.error("Signin controller error: ", error)
@@ -101,13 +112,17 @@ export const update_profile = async (req, res) => {
         if(!profilePic) return res.status(400).json({ message: "Profile picture is required!" })
 
         // update user
+        if(req.user.profilePic.name) await cloudinary.uploader.destroy(req.user.profilePic.name)
         const updated_user_profile = await cloudinary.uploader.upload(profilePic, {
-            folder: "tkp_profile_pics",
+            folder: "tech_games",
             public_id: `profile_pic_${user._id}`
         })
 
         const updated_user = await User.findByIdAndUpdate(user._id, {
-            profilePic: updated_user_profile.secure_url
+            profilePic: {
+                name: updated_user_profile.public_id,
+                uri: updated_user_profile.secure_url
+            }
         }, {new: true})
 
         res.status(200).json(updated_user)
