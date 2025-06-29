@@ -1,7 +1,10 @@
+body {
+    background-color: "black";
+}
+
 /* HEADER STYLE */
 header, footer {
     padding: 10px 6px;
-    background-color: rgb(0, 0, 0);
 }
 
 #logo-container {
@@ -21,11 +24,6 @@ header, footer {
     font-weight: bolder;
     font-size: x-large;
     background-image: url('https://i.pinimg.com/236x/24/33/07/2433078e3a4c19e965057b38c56659d6.jpg');
-}
-
-/* MAIN STYLE */
-main {
-    background-color: rgb(0, 0, 0);
 }
 
 /* UTILS */
