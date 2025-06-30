@@ -1,0 +1,146 @@
+<div class="max-w-4xl mx-auto bg-gray-900 p-8 rounded-2xl shadow-2xl space-y-8">
+
+    <!-- Tabs -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 border-b border-gray-700 pb-2">
+      <button onclick="switch_settings_tab('general')" id="tab-general"
+        class="tab-button px-4 py-2 font-semibold border-b-2 border-indigo-500 text-white">
+        General
+      </button>
+      <button onclick="switch_settings_tab('account')" id="tab-account"
+              class="tab-button px-4 py-2 font-semibold border-b-2 border-transparent text-gray-400 hover:text-white">
+        Account
+      </button>
+      <button onclick="switch_settings_tab('notifications')" id="tab-notifications"
+        class="tab-button px-4 py-2 font-semibold border-b-2 border-transparent text-gray-400 hover:text-white">
+        Notifications
+      </button>
+      <button onclick="switch_settings_tab('privacy')" id="tab-privacy"
+        class="tab-button px-4 py-2 font-semibold border-b-2 border-transparent text-gray-400 hover:text-white">
+        Privacy & Security
+      </button>
+      <button onclick="switch_settings_tab('about')" id="tab-about"
+        class="tab-button px-4 py-2 font-semibold border-b-2 border-transparent text-gray-400 hover:text-white">
+        About
+      </button>
+    </div>
+
+    <!-- TABS CONTENTS -->
+    <div class="pt-6 space-y-6">
+
+      <!-- General -->
+      <div id="tab-content-general" class="fade space-y-6">
+        <div>
+          <label class="block mb-1 text-sm text-gray-300">Language</label>
+          <select class="w-full bg-gray-800 border border-gray-700 p-3 rounded-lg text-white">
+            <option>English</option>
+            <option>Português</option>
+            <option>Español</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block mb-1 text-sm text-gray-300">Theme</label>
+          <select class="w-full bg-gray-800 border border-gray-700 p-3 rounded-lg text-white">
+            <option>Dark</option>
+            <option>Light</option>
+          </select>
+        </div>
+
+        <div class="flex justify-between items-center">
+          <label class="text-sm text-gray-300">Enable Sounds</label>
+          <input type="checkbox" class="w-5 h-5 accent-indigo-600" checked>
+        </div>
+
+        <div class="text-right pt-4">
+          <button class="px-6 py-3 bg-indigo-600 text-white hover:bg-indigo-500 rounded-lg font-semibold transition">
+            Save General Settings
+          </button>
+        </div>
+      </div>
+
+      <!-- Account -->
+      <div id="tab-content-account" class="fade space-y-6 hidden">
+        <div>
+          <label class="block mb-1 text-sm text-gray-300">Username</label>
+          <input type="text" value="gamer123" class="w-full bg-gray-800 border border-gray-700 p-3 rounded-lg text-white" />
+        </div>
+        <div>
+          <label class="block mb-1 text-sm text-gray-300">Email</label>
+          <input type="email" value="you@example.com" class="w-full bg-gray-800 border border-gray-700 p-3 rounded-lg text-white" />
+        </div>
+        <div>
+          <label class="block mb-1 text-sm text-gray-300">New Password</label>
+          <input type="password" class="w-full bg-gray-800 border border-gray-700 p-3 rounded-lg text-white" />
+        </div>
+        <div class="text-right pt-4">
+          <button class="px-6 py-3 bg-indigo-600 text-white hover:bg-indigo-500 rounded-lg font-semibold transition">
+            Update Account
+          </button>
+        </div>
+        <div class="border-t border-gray-700 pt-6">
+          <h2 class="text-lg font-semibold text-red-400 mb-2">Danger Zone</h2>
+          <p class="text-sm text-gray-400 mb-4">Once deleted, your account cannot be recovered.</p>
+          <button class="px-6 py-2 bg-red-600 hover:bg-red-500 rounded-lg text-white font-semibold transition">
+            Delete Account
+          </button>
+        </div>
+      </div>
+
+      <!-- Notifications -->
+      <div id="tab-content-notifications" class="fade space-y-6 hidden">
+        <div class="flex justify-between items-center">
+          <label class="text-sm text-gray-300">Game Alerts</label>
+          <input type="checkbox" class="w-5 h-5 accent-indigo-600" checked>
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="text-sm text-gray-300">Email Reminders</label>
+          <input type="checkbox" class="w-5 h-5 accent-indigo-600">
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="text-sm text-gray-300">Vibration Feedback</label>
+          <input type="checkbox" class="w-5 h-5 accent-indigo-600" checked>
+        </div>
+        <div class="text-right pt-4">
+          <button class="px-6 py-3 bg-indigo-600 text-white hover:bg-indigo-500 rounded-lg font-semibold transition">
+            Save Notifications
+          </button>
+        </div>
+      </div>
+
+      <!-- Privacy -->
+      <div id="tab-content-privacy" class="fade space-y-6 hidden">
+        <div class="flex justify-between items-center">
+          <label class="text-sm text-gray-300">Show my profile publicly</label>
+          <input type="checkbox" class="w-5 h-5 accent-indigo-600" checked>
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="text-sm text-gray-300">Enable 2FA (Two-Factor Auth)</label>
+          <input type="checkbox" class="w-5 h-5 accent-indigo-600">
+        </div>
+        <div>
+          <label class="block mb-1 text-sm text-gray-300">Active Sessions</label>
+          <ul class="text-sm text-gray-400 space-y-2">
+            <li>Chrome – Canada (current)</li>
+            <li>Firefox – Mobile</li>
+            <li>Edge – Public PC</li>
+          </ul>
+        </div>
+        <div class="text-right pt-4">
+          <button class="px-6 py-3 bg-indigo-600 text-white hover:bg-indigo-500 rounded-lg font-semibold transition">
+            Save Privacy Settings
+          </button>
+        </div>
+      </div>
+
+      <!-- About -->
+      <div id="tab-content-about" class="fade space-y-4 hidden text-sm text-gray-400">
+        <p><strong class="text-white">Tic Tac Toe</strong> is a modern cross-platform game made with ❤️ by Mike Pascal and Nathan Ibrango.</p>
+        <p>Version: <span class="text-white font-mono">v1.0.0</span></p>
+        <p>
+          Source: <a href="https://github.com/Mikeprogrammer973/tic-tac-toe" target="_blank" class="text-indigo-400 underline">GitHub Repository</a>
+        </p>
+      </div>
+
+    </div>
+</div>
+
