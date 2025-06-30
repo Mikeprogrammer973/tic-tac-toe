@@ -1,4 +1,4 @@
-import { toggle_ntf_modal } from "../utils/globals.js"
+import { toggle_ntf_modal, globals } from "../utils/globals.js"
 import { set_route } from "../utils/navigation.js"
 import { Render } from "../utils/render.js"
 
@@ -15,6 +15,7 @@ export class Auth
 
     async login(user_data)
     {
+        globals.spinner(true)
         const result = await (await fetch("http://127.0.0.1:5001/api/auth/signin", {
             method: "POST",
             headers: {
@@ -25,6 +26,7 @@ export class Auth
                 password: user_data.get("password")
             })
         })).json()
+        globals.spinner(false)
 
         if(result.username){
             Auth.logged = true
@@ -53,6 +55,7 @@ export class Auth
 
     async register(user_data)
     {
+        globals.spinner(true)
         const result = await (await fetch("http://127.0.0.1:5001/api/auth/signup", {
             method: "POST",
             headers: {
@@ -65,6 +68,7 @@ export class Auth
                 password: user_data.get("password")
             })
         })).json()
+        globals.spinner(false)
 
         if(result.username){
             Auth.logged = true
