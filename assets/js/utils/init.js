@@ -1,3 +1,4 @@
+import { controllers } from '../controllers/index.js' 
 
 export const home_auth_init = () => {
     const signinTab = document.getElementById('tab-signin');
@@ -22,4 +23,17 @@ export const home_auth_init = () => {
     signinTab.classList.add('bg-gray-800');
     signupTab.classList.remove('bg-gray-800');
     });
+
+    // Handle Auth forms submit
+    signinForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const form_data = new FormData(e.currentTarget)
+        new controllers.Auth().login(form_data)
+    })
+
+    signupForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const form_data = new FormData(e.currentTarget);
+        new controllers.Auth().register(form_data)
+    })
 }
