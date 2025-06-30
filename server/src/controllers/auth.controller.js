@@ -59,16 +59,16 @@ export const signup = async (req, res) => {
 
 
 export const signin = async (req, res) => {
-    const {email, password} = req.body
+    const {identifier, password} = req.body
     try {
         // valid data?
-        if(!email || !password) return res.status(400).json({ message: "All fields are required!" })
+        if(!identifier || !password) return res.status(400).json({ message: "All fields are required!" })
         
         // fetch user
-        const user = await User.findOne({email: email})
+        const user = await User.findOne({email: identifier}) || await User.findOne({username: identifier})
         
         // user exists?
-        if(!user) return res.status(400).json({ message: "Invalid email or password!" }) 
+        if(!user) return res.status(400).json({ message: "Invalid username/email or password!" }) 
 
         // check password
         if(!bcryptjs.compareSync(password, user.password)) return res.status(400).json({ message: "Invalid email or password!" })
