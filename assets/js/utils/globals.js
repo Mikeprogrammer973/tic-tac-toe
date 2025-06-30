@@ -4,6 +4,7 @@ const ntf_modal_container = document.getElementById("notification-modal")
 const ntf_modal_title = document.getElementById("ntf-title")
 const ntf_modal_msg = document.getElementById("ntf-msg")
 const ntf_modal_action = document.getElementById("ntf-action-btn")
+const spinner = document.getElementById("spinner")
 
 
 export const globals = {
@@ -13,6 +14,9 @@ export const globals = {
         title: ntf_modal_title,
         msg: ntf_modal_msg,
         action: ntf_modal_action
+    },
+    spinner: (show) => {
+        spinner.classList.toggle("hidden", !show)
     }
 }
 

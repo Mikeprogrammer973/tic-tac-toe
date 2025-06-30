@@ -37,3 +37,7 @@ export const home_auth_init = () => {
         new controllers.Auth().register(form_data)
     })
 }
+
+export const settings_init = {
+    
+}
