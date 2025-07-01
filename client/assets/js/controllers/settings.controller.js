@@ -1,12 +1,12 @@
 import { globals } from "../utils/globals.js"
 import { Render } from "../utils/render.js"
-import { Auth } from "./auth.controller.js"
+import { controllers } from "./index.js"
 
 export default async function settings()
 {
     let page_dir = "/pages/globals/denied.html" 
 
-    if(new Auth().check())
+    if(controllers.Auth.logged)
     {
         page_dir = "/pages/settings/settings.html" 
     }
