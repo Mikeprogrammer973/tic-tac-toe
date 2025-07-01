@@ -3,7 +3,7 @@ import { toggle_ntf_modal } from "./utils/globals.js"
 
 config_navigation()
 
-window.onload = () => {
+window.onload = async () => {
     // NTF
     document.getElementById("ntf-close-btn").addEventListener("click", () => {
         toggle_ntf_modal(false)

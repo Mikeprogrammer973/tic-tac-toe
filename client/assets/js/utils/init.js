@@ -38,6 +38,8 @@ export const home_auth_init = () => {
     })
 }
 
-export const settings_init = {
-    
+export const profile_auth_init = () => {
+    document.getElementById('logout-btn').addEventListener('click', () => {
+        new controllers.Auth().logout()
+    })
 }

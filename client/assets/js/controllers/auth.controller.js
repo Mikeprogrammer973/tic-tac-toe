@@ -7,16 +7,31 @@ const render = new Render()
 export class Auth 
 {
     static logged = false
+    static user = null
 
-    check()
+    async check()
     {
+        globals.spinner(true)
+        const result = await (await fetch("/api/auth/check", {
+            method: "GET"
+        })).json()
+        globals.spinner(false)
+        
+        if(!result.message){
+            Auth.logged = true
+            Auth.user = result
+        } else {
+            Auth.logged = false
+            Auth.user = null
+        }
+
         return Auth.logged
     }
 
     async login(user_data)
     {
         globals.spinner(true)
-        const result = await (await fetch("http://127.0.0.1:5001/api/auth/signin", {
+        const result = await (await fetch("/api/auth/signin", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -56,7 +71,7 @@ export class Auth
     async register(user_data)
     {
         globals.spinner(true)
-        const result = await (await fetch("http://127.0.0.1:5001/api/auth/signup", {
+        const result = await (await fetch("/api/auth/signup", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -95,14 +110,20 @@ export class Auth
         }
     }
 
-    logout()
+    async logout()
     {
+        globals.spinner(true)
+        await fetch("/api/auth/signout", {
+            method: "POST"
+        })
         Auth.logged = false
-    
+        Auth.user = null
+        globals.spinner(false)
+        Auth.redirect(["home", "Home"])
     }
 
-    static redirect()
+    static redirect(route = ["profile", "Profile"])
     {
-        set_route(["profile", "Profile"])
+        set_route(route)
     }
 }

@@ -1,9 +1,14 @@
+import { controllers } from "../controllers/index.js"
 import { handle_controller } from "./controller_handler.js"
 import { routes } from "./routes.js"
 
 function handle_navigation()
 {
-    set_route([Object.keys(routes)[1], routes[Object.keys(routes)[1]][1]])
+    let slt_route = localStorage.getItem("ttt_slt_route")
+    if(!slt_route) slt_route = Object.keys(routes)[0]
+    
+    set_route([slt_route, routes[slt_route][1]])
+
     for(let route of Object.keys(routes))
     {
         document.getElementById(route).addEventListener('click', (el) => {
@@ -16,6 +21,7 @@ function handle_navigation()
 function handle_current_navigation()
 {
     const route = (window.location.hash || "#/").split('#/')[1]
+    localStorage.setItem("ttt_slt_route", route)
     document.title = routes[route][1]
     set_selected_menu(route)
     handle_controller(route)

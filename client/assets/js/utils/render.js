@@ -1,4 +1,4 @@
-import { globals, toggle_ntf_modal } from "../utils/globals.js"
+import { globals, toggle_ntf_modal } from "./globals.js"
 
 export class Render
 {

@@ -12,9 +12,9 @@ const app = express()
 
 const PORT = process.env.PORT
 
+app.use(express.static('client'))
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors())
 
 app.use("/api/auth", authRoutes)
 

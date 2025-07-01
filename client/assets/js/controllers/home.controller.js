@@ -9,7 +9,7 @@ export default async function home()
 
     let util = () => {}
     
-    if(!new controllers.Auth().check())
+    if(!controllers.Auth.logged)
     {
         page_dir = "/pages/home/auth_forms.html"
         util = home_auth_init
