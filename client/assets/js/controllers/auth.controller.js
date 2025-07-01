@@ -44,7 +44,6 @@ export class Auth
         globals.spinner(false)
 
         if(result.username){
-            Auth.logged = true
             render.notification({
                 title: "Tic Tac Toe",
                 msg: "Welcome back, " + result.username + "!",
@@ -86,7 +85,6 @@ export class Auth
         globals.spinner(false)
 
         if(result.username){
-            Auth.logged = true
             render.notification({
                 title: "Tic Tac Toe",
                 msg: "Welcome, " + result.username + "!",
@@ -116,8 +114,6 @@ export class Auth
         await fetch("/api/auth/signout", {
             method: "POST"
         })
-        Auth.logged = false
-        Auth.user = null
         globals.spinner(false)
         Auth.redirect(["home", "Home"])
     }
