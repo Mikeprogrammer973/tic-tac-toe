@@ -21,6 +21,12 @@ function handle_navigation()
 function handle_current_navigation()
 {
     const route = (window.location.hash || "#/").split('#/')[1]
+
+    if(!Object.keys(routes).includes(route)){
+        set_route([Object.keys(routes)[0], routes[Object.keys(routes)[0]][1]])
+        return
+    }
+
     localStorage.setItem("ttt_slt_route", route)
     document.title = routes[route][1]
     set_selected_menu(route)

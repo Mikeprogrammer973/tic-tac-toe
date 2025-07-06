@@ -1,21 +1,12 @@
-import { Game } from "./game.js";
 
 export class Player
 {
-    constructor(name, symbol, game = new Game())
+    constructor(name, symbol, game)
     {
         this.name = name;
         this.symbol = symbol;
         this.game = game;
-    }
-
-    play(move)
-    {
-        this.game.make_move(move.row, move.col)
-
-        if(this.game.game_over)
-        {
-            console.log(`${this.name} wins!`);
-        }
+        this.isBot = false;
+        this.mySelf = true
     }
 }
