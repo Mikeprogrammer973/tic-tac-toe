@@ -80,7 +80,8 @@ header, footer {
 .cell {
   width: 100%;
   aspect-ratio: 1 / 1;
-  background: #eee;
+  background: #2b2a2a;
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,9 +90,27 @@ header, footer {
   user-select: none;
 }
 
+.win {
+  background: #29045a;
+}
+
+.retry-btn{
+  width: 100%;
+  font-weight: 300;
+  font-size: x-large;
+  color: rgb(255, 255, 255);
+  background: #311f52;
+  padding: 10px 5px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.retry-btn:hover{
+  background: #36255f;
+}
 
 .cell:hover {
-  background: #ccc;
+  background: #494848;
 }
 
 

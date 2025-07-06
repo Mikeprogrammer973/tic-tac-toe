@@ -6,11 +6,10 @@ export class Game
     {
         this.board_size = board_size
         this.board = this.create_board()
-        this.turn = 'X'
+        this.players = []
+        this.turn = null
         this.game_over = false
         this.winner = null
-
-        this.update_status("Your turn", "your-turn")
     }
 
     update_status(message, variant = "default") {
@@ -79,65 +78,125 @@ export class Game
             const cell = document.createElement('div')
             cell.classList.add('cell')
             cell.dataset.index = i
-            cell.addEventListener('click', (e) => this.make_move(e))
+            cell.addEventListener('click', (e) => {
+                if(!this.game_over && !this.turn.isBot)
+                {
+                    this.make_move(e.target.dataset.index, this.turn.symbol)
+                }
+            })
             board.appendChild(cell)
             cells.push(cell)
         }
 
+        const retry_btn = document.createElement('button')
+        retry_btn.id = 'retry-btn'
+        retry_btn.classList.add('retry-btn', 'hidden')
+        retry_btn.textContent = "Play again"
+        retry_btn.addEventListener('click', () => {
+            this.reset_game()
+        })
+        globals.game_board.appendChild(retry_btn)
+
+        this.update_status("Your turn", "your-turn")
+
         return cells
     }
 
-    make_move(e)
+    make_move(move, symbol)
     {
-        if (this.game_over) return false;
-        const index = e.target.dataset.index
+        if(this.game_over)
+        {
+            console.log("Game already over!");
+            return;
+        }
+        
+        if(this.board[move].textContent != "")
+        {
+            console.log("Cell already taken!");
+            return;
+        }
 
-        if (this.board[index].textContent !== "") return false;
+        this.board[move].textContent = symbol
 
-        this.board[index].textContent = this.turn
+        this.check_for_winner()
 
-        this.turn = this.turn === 'X' ? 'O' : 'X'
+        if(!this.game_over)
+        {
+            this.turn = this.turn == this.players[0] ? this.players[1] : this.players[0]
 
-        return true
+            const status = {
+                message: !this.turn.mySelf ? "Opponent's turn" : "Your turn",
+                variant: !this.turn.mySelf  ? "opponent-turn" : "your-turn"
+            }
+            this.update_status(status.message, status.variant)
+
+            if(this.turn.isBot)
+            {
+                this.turn.play()
+            }
+        } else {
+            const status = {message: "Game over", variant: "default"}
+
+            if(this.winner == 'draw')
+            {
+                status.message = "It's a draw!"
+                status.variant = "draw"
+            } else if(this.winner.mySelf)
+            {
+                status.message = "You won!"
+                status.variant = "win"
+            } else {
+                status.message = "You lost!"
+                status.variant = "lose"
+            }
+
+            this.update_status(status.message, status.variant)
+
+            document.getElementById('retry-btn').classList.remove('hidden')
+        }
     }
 
     check_for_winner()
     {
-        // Check rows
-        for (let i = 0; i < 3; i++) {
-            if (this.board[i][0] === this.board[i][1] && this.board[i][1] === this.board[i][2] && this.board[i][0] !== '') {
-                this.winner = this.board[i][0];
+        const winning_combinations = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ]
+        for (let i = 0; i < winning_combinations.length; i++) {
+            const [a, b, c] = winning_combinations[i];
+            if (this.board[a].textContent === this.board[b].textContent && this.board[a].textContent === this.board[c].textContent && this.board[a].textContent !== '') {
                 this.game_over = true;
+                this.winner = this.turn;
+
+                this.board[a].classList.add('win');
+                this.board[b].classList.add('win');
+                this.board[c].classList.add('win');
+
                 return;
             }
         }
 
-        // Check columns
-        for (let i = 0; i < 3; i++) {
-            if (this.board[0][i] === this.board[1][i] && this.board[1][i] === this.board[2][i] && this.board[0][i] !== '') {
-                this.winner = this.board[0][i];
-                this.game_over = true;
-                return;
-            }
+        // Draw
+        if (this.board.every(cell => cell.textContent !== '')) {
+            this.game_over = true;
+            this.winner = 'draw';
+            return;
         }
 
-        // Check diagonals
-        if (this.board[0][0] === this.board[1][1] && this.board[1][1] === this.board[2][2] && this.board[0][0] !== '') {
-            this.winner = this.board[0][0];
-            this.game_over = true;
-            return;
-        }
-        if (this.board[0][2] === this.board[1][1] && this.board[1][1] === this.board[2][0] && this.board[0][2] !== '') {
-            this.winner = this.board[0][2];
-            this.game_over = true;
-            return;
-        }
+        this.winner = null;
+        this.game_over = false;
     }
 
     reset_game()
     {
         this.board = this.create_board();
-        this.turn = 'X';
+        this.turn = this.players[0];
         this.game_over = false;
         this.winner = null;
     }
