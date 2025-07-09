@@ -77,13 +77,13 @@ export class PC
     {
         const winning_strategies = [
             [0, 2, 6],
-            [2, 4, 8],
-            [6, 8, 4],
             [0, 6, 8],
-            [0, 4, 6],
-            [0, 4, 2],
             [0, 2, 8],
             [2, 8, 6],
+            [2, 4, 8],
+            [6, 8, 4],
+            [0, 4, 6],
+            [0, 4, 2]
         ]
 
         for (let i = 0; i < winning_strategies.length; i++) {
