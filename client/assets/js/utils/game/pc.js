@@ -125,6 +125,10 @@ export class PC
     make_expert_move()
     {
         if(this.game.board.every(cell => cell.textContent == '')) return [0, 2, 6, 8][Math.floor(Math.random() * 4)]
+        if(this.game.board.filter(cell => cell.textContent != '').length == 2){
+            const xm = [0, 2, 4, 6, 8].filter(i => this.game.board[i].textContent == '')
+            return xm[Math.floor(Math.random() * xm.length)]
+        }
 
         const winning_move = this.any_winning_move();
         if(winning_move)
