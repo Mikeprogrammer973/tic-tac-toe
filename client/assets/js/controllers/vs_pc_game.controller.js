@@ -9,7 +9,7 @@ export default async function vs_pc_game()
     const pc = new PC('O', game)
 
     game.players = [player, pc]
-    game.turn = player
+    game.reset_game()
 
     console.log(game);
 }

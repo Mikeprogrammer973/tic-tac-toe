@@ -15,7 +15,7 @@ export class Game
     constructor(board_size = 3)
     {
         this.board_size = board_size
-        this.board = this.create_board()
+        this.board = null
         this.players = []
         this.turn = null
         this.game_over = false
@@ -196,8 +196,19 @@ export class Game
     reset_game()
     {
         this.board = this.create_board();
-        this.turn = this.players[0];
+        this.turn = this.players[Math.floor(Math.random() * this.players.length)];
         this.game_over = false;
         this.winner = null;
+
+        const status = {
+            message: !this.turn.mySelf ? "Opponent's turn" : "Your turn",
+            variant: !this.turn.mySelf  ? "opponent-turn" : "your-turn"
+        }
+        this.update_status(status.message, status.variant)
+
+        if(this.turn.isBot)
+        {
+            this.turn.play()
+        }
     }
 }
