@@ -55,37 +55,17 @@ export class PC
         return valid_move;
     }
 
-    any_winning_move()
+    any_winning_move(symbol = this.symbol)
     {
         for (let i = 0; i < Game.winning_combinations.length; i++) {
             const [a, b, c] = Game.winning_combinations[i];
-            if (this.game.board[a].textContent === this.game.board[b].textContent && this.game.board[a].textContent === this.symbol && this.game.board[c].textContent === '') {
+            if (this.game.board[a].textContent === this.game.board[b].textContent && this.game.board[a].textContent === symbol && this.game.board[c].textContent === '') {
                 return this.game.board[c].dataset.index;
             }
-            if (this.game.board[a].textContent === this.game.board[c].textContent && this.game.board[a].textContent === this.symbol && this.game.board[b].textContent === '') {
+            if (this.game.board[a].textContent === this.game.board[c].textContent && this.game.board[a].textContent === symbol && this.game.board[b].textContent === '') {
                 return this.game.board[b].dataset.index;
             }
-            if (this.game.board[b].textContent === this.game.board[c].textContent && this.game.board[b].textContent === this.symbol && this.game.board[a].textContent === '') {
-                return this.game.board[a].dataset.index;
-            }
-        }
-
-        return null;
-    }
-
-    any_blocking_move()
-    {
-        const  opponent_symbol = this.symbol === 'X' ? 'O' : 'X';
-
-        for (let i = 0; i < Game.winning_combinations.length; i++) {
-            const [a, b, c] = Game.winning_combinations[i];
-            if (this.game.board[a].textContent === this.game.board[b].textContent && this.game.board[a].textContent === opponent_symbol && this.game.board[c].textContent === '') {
-                return this.game.board[c].dataset.index;
-            }
-            if (this.game.board[a].textContent === this.game.board[c].textContent && this.game.board[a].textContent === opponent_symbol && this.game.board[b].textContent === '') {
-                return this.game.board[b].dataset.index;
-            }
-            if (this.game.board[b].textContent === this.game.board[c].textContent && this.game.board[b].textContent === opponent_symbol && this.game.board[a].textContent === '') {
+            if (this.game.board[b].textContent === this.game.board[c].textContent && this.game.board[b].textContent === symbol && this.game.board[a].textContent === '') {
                 return this.game.board[a].dataset.index;
             }
         }
@@ -122,7 +102,6 @@ export class PC
         return null;
     }
 
-
     make_thoughty_move()
     {
         const winning_move = this.any_winning_move();
@@ -132,7 +111,8 @@ export class PC
             return winning_move;
         }
 
-        const blocking_move = this.any_blocking_move();
+        const  opponent_symbol = this.symbol === 'X' ? 'O' : 'X';
+        const blocking_move = this.any_winning_move(opponent_symbol);
         if(blocking_move)
         {
             console.log("Blocking move found!",  blocking_move);
@@ -153,7 +133,8 @@ export class PC
             return winning_move;
         }
 
-        const blocking_move = this.any_blocking_move();
+        const  opponent_symbol = this.symbol === 'X' ? 'O' : 'X';
+        const blocking_move = this.any_winning_move(opponent_symbol);
         if(blocking_move)
         {
             console.log("Blocking move found!",  blocking_move);
