@@ -2,10 +2,20 @@ import { globals } from "../globals.js"
  
 export class Game
 {
+    static winning_combinations = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ]
     constructor(board_size = 3)
     {
         this.board_size = board_size
-        this.board = this.create_board()
+        this.board = null
         this.players = []
         this.turn = null
         this.game_over = false
@@ -158,18 +168,8 @@ export class Game
 
     check_for_winner()
     {
-        const winning_combinations = [
-            [0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8],
-            [0, 3, 6],
-            [1, 4, 7],
-            [2, 5, 8],
-            [0, 4, 8],
-            [2, 4, 6]
-        ]
-        for (let i = 0; i < winning_combinations.length; i++) {
-            const [a, b, c] = winning_combinations[i];
+        for (let i = 0; i < Game.winning_combinations.length; i++) {
+            const [a, b, c] = Game.winning_combinations[i];
             if (this.board[a].textContent === this.board[b].textContent && this.board[a].textContent === this.board[c].textContent && this.board[a].textContent !== '') {
                 this.game_over = true;
                 this.winner = this.turn;
@@ -196,8 +196,19 @@ export class Game
     reset_game()
     {
         this.board = this.create_board();
-        this.turn = this.players[0];
+        this.turn = this.players[Math.floor(Math.random() * this.players.length)];
         this.game_over = false;
         this.winner = null;
+
+        const status = {
+            message: !this.turn.mySelf ? "Opponent's turn" : "Your turn",
+            variant: !this.turn.mySelf  ? "opponent-turn" : "your-turn"
+        }
+        this.update_status(status.message, status.variant)
+
+        if(this.turn.isBot)
+        {
+            this.turn.play()
+        }
     }
 }

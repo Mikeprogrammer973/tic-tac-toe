@@ -9,7 +9,7 @@ export default async function vs_local_game()
     player2.mySelf = false
 
     game.players = [player, player2]
-    game.turn = player
+    game.reset_game()
 
     console.log(game);
 }
