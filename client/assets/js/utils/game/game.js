@@ -2,6 +2,16 @@ import { globals } from "../globals.js"
  
 export class Game
 {
+    static winning_combinations = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ]
     constructor(board_size = 3)
     {
         this.board_size = board_size
@@ -158,18 +168,8 @@ export class Game
 
     check_for_winner()
     {
-        const winning_combinations = [
-            [0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8],
-            [0, 3, 6],
-            [1, 4, 7],
-            [2, 5, 8],
-            [0, 4, 8],
-            [2, 4, 6]
-        ]
-        for (let i = 0; i < winning_combinations.length; i++) {
-            const [a, b, c] = winning_combinations[i];
+        for (let i = 0; i < Game.winning_combinations.length; i++) {
+            const [a, b, c] = Game.winning_combinations[i];
             if (this.board[a].textContent === this.board[b].textContent && this.board[a].textContent === this.board[c].textContent && this.board[a].textContent !== '') {
                 this.game_over = true;
                 this.winner = this.turn;
