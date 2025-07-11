@@ -12,7 +12,7 @@ export class Game
         [0, 4, 8],
         [2, 4, 6]
     ]
-    constructor(board_size = 3)
+    constructor( mode = "local", board_size = 3)
     {
         this.board_size = board_size
         this.board = null
@@ -20,6 +20,90 @@ export class Game
         this.turn = null
         this.game_over = false
         this.winner = null
+        this.mode = mode
+        this.socket = null
+        this.roomId = null
+
+        if (this.mode === "online") {
+            if (!this.socket || !this.socket.connected) {
+                this.socket = io();
+            }
+
+            this.board = this.create_board();
+
+            this.socket.on("waiting", () => {
+                this.update_status("Waiting for another player...", "waiting");
+            });
+
+            this.socket.on("startGame", (data) => {
+                this.roomId = data.roomId;
+                const player = {
+                    symbol: data.symbol,
+                    mySelf: true,
+                    isBot: false,
+                };
+                const opponent = {
+                    symbol: data.symbol === "X" ? "O" : "X",
+                    mySelf: false,
+                    isBot: false,
+                };
+
+                this.players = [player, opponent];
+                this.turn = data.symbol === "X" ? player : opponent;
+
+                this.update_status(this.turn.mySelf ? "Your turn" : "Opponent's turn", this.turn.mySelf ? "your-turn" : "opponent-turn");
+            });
+
+            this.socket.on("opponentMove", ({ index, symbol }) => {
+                this.board[index].textContent = symbol;
+                this.turn = this.players.find(p => p.mySelf);
+                this.update_status("Your turn", "your-turn");
+            });
+
+            this.socket.on("gameOver", ({ winner }) => {
+                this.game_over = true
+
+                if (winner === 'draw') {
+                    this.winner = 'draw'
+                    this.update_status("It's a draw!", "draw")
+                } else {
+                    const mySymbol = this.players.find(p => p.mySelf).symbol
+                    const didWin = mySymbol === winner
+                    this.winner = didWin ? this.players.find(p => p.mySelf) : this.players.find(p => !p.mySelf)
+                    this.update_status(didWin ? "You won!" : "You lost!", didWin ? "win" : "lose")
+                    this.check_for_winner()
+                }
+
+                document.getElementById('retry-btn')?.classList.remove('hidden')
+            })
+
+            this.socket.on("rematchAccepted", (data) => {
+                const player = {
+                    symbol: data.symbol,
+                    mySelf: true,
+                    isBot: false,
+                };
+                const opponent = {
+                    symbol: data.symbol === "X" ? "O" : "X",
+                    mySelf: false,
+                    isBot: false,
+                };
+
+                this.players = [player, opponent];
+                this.turn = data.symbol === "X" ? player : opponent;
+                this.board = this.create_board();
+                this.game_over = false;
+                this.winner = null;
+                this.roomId = data.roomId;
+
+                this.update_status(this.turn.mySelf ? "Your turn" : "Opponent's turn", this.turn.mySelf ? "your-turn" : "opponent-turn");
+            })
+
+            // Desconectar socket ao sair
+            window.addEventListener("hashchange", () => this.socket.disconnect());
+            window.addEventListener("beeforeunload", () => this.socket.disconnect());
+        }
+
     }
 
     update_status(message, variant = "default") {
@@ -89,6 +173,7 @@ export class Game
             cell.classList.add('cell')
             cell.dataset.index = i
             cell.addEventListener('click', (e) => {
+                if(!this.turn || !this.players.length ||this.mode === "online" && !this.turn.mySelf) return
                 if(!this.game_over && !this.turn.isBot)
                 {
                     this.make_move(e.target.dataset.index, this.turn.symbol)
@@ -103,7 +188,13 @@ export class Game
         retry_btn.classList.add('retry-btn', 'hidden')
         retry_btn.textContent = "Play again"
         retry_btn.addEventListener('click', () => {
-            this.reset_game()
+            if (this.mode === "online") {
+                this.socket.emit("rematchRequest", { roomId: this.roomId })
+                this.update_status("Waiting for the opponent to accept...", "waiting")
+                retry_btn.classList.add('hidden')
+            } else {
+                this.reset_game()
+            }
         })
         globals.game_board.appendChild(retry_btn)
 
@@ -114,6 +205,10 @@ export class Game
 
     make_move(move, symbol)
     {
+        if (!this.board || !this.turn || !this.players.length) {
+            console.warn("The game has not been initialized properly.")
+            return
+        }
         if(this.game_over)
         {
             console.log("Game already over!");
@@ -127,6 +222,14 @@ export class Game
         }
 
         this.board[move].textContent = symbol
+
+        if (this.mode === "online") {
+            this.socket.emit("makeMove", {
+                roomId: this.roomId,
+                index: move,
+                symbol: symbol
+            });
+        }
 
         this.check_for_winner()
 
@@ -163,6 +266,13 @@ export class Game
             this.update_status(status.message, status.variant)
 
             document.getElementById('retry-btn').classList.remove('hidden')
+
+            if (this.mode === "online") {
+                this.socket.emit("gameOver", {
+                    roomId: this.roomId,
+                    winner: this.winner === 'draw' ? 'draw' : this.winner.symbol
+                })
+            }
         }
     }
 
