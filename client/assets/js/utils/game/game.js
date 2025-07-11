@@ -101,7 +101,7 @@ export class Game
 
             // Desconectar socket ao sair
             window.addEventListener("hashchange", () => this.socket.disconnect());
-            window.addEventListener("beeforeunload", () => this.socket.disconnect());
+            window.addEventListener("beforeunload", () => this.socket.disconnect());
         }
 
     }
