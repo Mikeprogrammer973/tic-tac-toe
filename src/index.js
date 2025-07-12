@@ -5,6 +5,7 @@ import { connect as connectDB } from './lib/db.js'
 import cookieParser from 'cookie-parser'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
+import e from 'express'
 
 
 dotenv.config()
@@ -70,9 +71,18 @@ io.on('connection', (socket) => {
 
             io.to(id1).emit("rematchAccepted", { roomId, symbol: symbols[0] });
             io.to(id2).emit("rematchAccepted", { roomId, symbol: symbols[1] });
+        } else {
+            socket.to(roomId).emit("rematchRequest")
         }
+    
     });
 
+    socket.on("disconnecting", () => {
+        const rooms = Array.from(socket.rooms).filter(r => r !== socket.id);
+        rooms.forEach(roomId => {
+            socket.to(roomId).emit("opponentLeft");
+        });
+    });
 
     socket.on("disconnect", () => {
         console.log("Jogador desconectado:", socket.id);

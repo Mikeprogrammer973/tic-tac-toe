@@ -1,4 +1,7 @@
-import { globals } from "../globals.js"
+import { globals, toggle_ntf_modal } from "../globals.js"
+import { Player } from "./player.js"
+import {  controllers} from '../../controllers/index.js'
+import { Render } from "../render.js"
  
 export class Game
 {
@@ -16,7 +19,7 @@ export class Game
     {
         this.board_size = board_size
         this.board = null
-        this.players = []
+        this.players = [new Player("Unknown" || controllers.Auth.user.username, "X", this)]
         this.turn = null
         this.game_over = false
         this.winner = null
@@ -37,21 +40,15 @@ export class Game
 
             this.socket.on("startGame", (data) => {
                 this.roomId = data.roomId;
-                const player = {
-                    symbol: data.symbol,
-                    mySelf: true,
-                    isBot: false,
-                };
-                const opponent = {
-                    symbol: data.symbol === "X" ? "O" : "X",
-                    mySelf: false,
-                    isBot: false,
-                };
+                const player = new  Player("Unknown" || controllers.Auth.user.username, data.symbol, this);
+
+                const opponent = new Player("Opponent", data.symbol === "X" ? "O" : "X", this);
+                opponent.mySelf = false;
 
                 this.players = [player, opponent];
                 this.turn = data.symbol === "X" ? player : opponent;
 
-                this.update_status(this.turn.mySelf ? "Your turn" : "Opponent's turn", this.turn.mySelf ? "your-turn" : "opponent-turn");
+                this.update_status(this.turn.mySelf ? "Your turn" : `${this.turn.name}'s turn`, this.turn.mySelf ? "your-turn" : "opponent-turn");
             });
 
             this.socket.on("opponentMove", ({ index, symbol }) => {
@@ -77,17 +74,32 @@ export class Game
                 document.getElementById('retry-btn')?.classList.remove('hidden')
             })
 
+            this.socket.on("rematchRequest", () => {
+                new Render().notification({
+                    title: "Rematch requested",
+                    msg: "Your opponent wants to play again. Do you accept?",
+                    action: {
+                        text: "Accept",
+                        callback: () => {
+                            this.socket.emit("rematchRequest", { roomId: this.roomId });
+                        }
+                    }
+                });
+
+                const retry_btn = document.getElementById('retry-btn')
+                retry_btn.textContent = 'New game'
+                retry_btn.addEventListener('click', () => {
+                    location.reload()
+                })
+
+            });
+
             this.socket.on("rematchAccepted", (data) => {
-                const player = {
-                    symbol: data.symbol,
-                    mySelf: true,
-                    isBot: false,
-                };
-                const opponent = {
-                    symbol: data.symbol === "X" ? "O" : "X",
-                    mySelf: false,
-                    isBot: false,
-                };
+                toggle_ntf_modal(false)
+                const player = new  Player("Unknown" || controllers.Auth.user.username, data.symbol, this);
+
+                const opponent = new Player("Opponent", data.symbol === "X" ? "O" : "X", this);
+                opponent.mySelf = false;
 
                 this.players = [player, opponent];
                 this.turn = data.symbol === "X" ? player : opponent;
@@ -96,12 +108,31 @@ export class Game
                 this.winner = null;
                 this.roomId = data.roomId;
 
-                this.update_status(this.turn.mySelf ? "Your turn" : "Opponent's turn", this.turn.mySelf ? "your-turn" : "opponent-turn");
+                this.update_status(this.turn.mySelf ? "Your turn" : `${this.turn.name}'s turn`, this.turn.mySelf ? "your-turn" : "opponent-turn");
             })
+
+            this.socket.on("opponentLeft", () => {
+                new Render().notification({
+                    title: "Your opponent left the game",
+                    msg: "Please, press the button below to start a new game.",
+                    action: {
+                        text: "New game",
+                        callback: () => location.reload()
+                    }
+                });
+
+                const retry_btn = document.getElementById('retry-btn')
+                retry_btn.classList.remove('hidden')
+                retry_btn.textContent = 'New game'
+                retry_btn.addEventListener('click', () => {
+                    location.reload()
+                })
+
+            });
 
             // Desconectar socket ao sair
             window.addEventListener("hashchange", () => this.socket.disconnect());
-            window.addEventListener("beeforeunload", () => this.socket.disconnect());
+            window.addEventListener("beforeunload", () => this.socket.disconnect());
         }
 
     }
@@ -187,18 +218,30 @@ export class Game
         retry_btn.id = 'retry-btn'
         retry_btn.classList.add('retry-btn', 'hidden')
         retry_btn.textContent = "Play again"
-        retry_btn.addEventListener('click', () => {
+        retry_btn.addEventListener('click', (e) => {
             if (this.mode === "online") {
-                this.socket.emit("rematchRequest", { roomId: this.roomId })
-                this.update_status("Waiting for the opponent to accept...", "waiting")
-                retry_btn.classList.add('hidden')
+                this.socket.emit("rematchRequest", { roomId: this.roomId });
+
+                new Render().notification({
+                    title: "Rematch requested",
+                    msg: "Waiting for the opponent's response...",
+                    action: {
+                        text: "Cancel",
+                        callback: () => {
+                            location.reload()
+                        }
+                    }
+                });
+
+                e.currentTarget.textContent = 'New  game'
+                e.currentTarget.addEventListener('click', () => {
+                    location.reload()
+                })
             } else {
                 this.reset_game()
             }
         })
         globals.game_board.appendChild(retry_btn)
-
-        this.update_status("Your turn", "your-turn")
 
         return cells
     }
@@ -238,7 +281,7 @@ export class Game
             this.turn = this.turn == this.players[0] ? this.players[1] : this.players[0]
 
             const status = {
-                message: !this.turn.mySelf ? "Opponent's turn" : "Your turn",
+                message: !this.turn.mySelf ? `${this.turn.name}'s turn` : "Your turn",
                 variant: !this.turn.mySelf  ? "opponent-turn" : "your-turn"
             }
             this.update_status(status.message, status.variant)
@@ -311,7 +354,7 @@ export class Game
         this.winner = null;
 
         const status = {
-            message: !this.turn.mySelf ? "Opponent's turn" : "Your turn",
+            message: !this.turn.mySelf ? `${this.turn.name}'s turn` : "Your turn",
             variant: !this.turn.mySelf  ? "opponent-turn" : "your-turn"
         }
         this.update_status(status.message, status.variant)
