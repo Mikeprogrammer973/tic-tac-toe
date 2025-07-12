@@ -7,7 +7,10 @@ export class Render
         globals.notification.title.innerHTML = title
         globals.notification.msg.innerHTML = msg
         globals.notification.action.innerHTML = text
-        globals.notification.action.onclick = callback
+        globals.notification.action.onclick = () => {
+            callback()
+            toggle_ntf_modal(false)
+        }
         toggle_ntf_modal(true)
     }
 
