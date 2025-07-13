@@ -1,11 +1,12 @@
 import express from 'express'
 import authRoutes from './routes/auth.route.js'
+import userRoutes from './routes/user.route.js'
 import dotenv from 'dotenv'
 import { connect as connectDB } from './lib/db.js'
 import cookieParser from 'cookie-parser'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
-import e from 'express'
+import  { socket_authMiddleware } from './middlewares/auth.middleware.js'
 
 
 dotenv.config()
@@ -21,9 +22,14 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.use("/api/auth", authRoutes)
+app.use("/api/user", userRoutes)
 
 let awaiting_player = null
 const rematchVotes = new Map()
+
+// Socket.io
+
+io.use(socket_authMiddleware)
 
 io.on('connection', (socket) => {
     console.log('Jogador conectado:',  socket.id);
@@ -35,8 +41,12 @@ io.on('connection', (socket) => {
         awaiting_player.join(roomId)
 
         // Start the game
-        socket.emit("startGame", { roomId, symbol: "O" });
-        awaiting_player.emit("startGame", { roomId, symbol: "X" });
+
+        const name = socket.user.username
+        const opponent_name = awaiting_player.user.username
+
+        socket.emit("startGame", { roomId, symbol: "O",  name, opponent_name });
+        awaiting_player.emit("startGame", { roomId, symbol: "X",  name: opponent_name, opponent_name: name });
 
         // Reset the queue
         awaiting_player = null
@@ -68,9 +78,11 @@ io.on('connection', (socket) => {
             const sockets = Array.from(io.sockets.adapter.rooms.get(roomId) || []);
             const [id1, id2] = sockets;
             const symbols = Math.random() > 0.5 ? ["X", "O"] : ["O", "X"];
+            const name = socket.user.username
+            const opponent_name = io.sockets.sockets.get(id2).user.username === name ? io.sockets.sockets.get(id1).user.username : io.sockets.sockets.get(id2).user.username
 
-            io.to(id1).emit("rematchAccepted", { roomId, symbol: symbols[0] });
-            io.to(id2).emit("rematchAccepted", { roomId, symbol: symbols[1] });
+            io.to(id1).emit("rematchAccepted", { roomId, symbol: symbols[0], name, opponent_name });
+            io.to(id2).emit("rematchAccepted", { roomId, symbol: symbols[1],  name: opponent_name, opponent_name: name });
         } else {
             socket.to(roomId).emit("rematchRequest")
         }
