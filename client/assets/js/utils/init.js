@@ -7,21 +7,21 @@ export const home_auth_init = () => {
     const signupForm = document.getElementById('form-signup');
 
     signinTab.addEventListener('click', () => {
-    signinForm.classList.remove('hidden');
-    signupForm.classList.add('hidden');
-    signinTab.classList.add('bg-indigo-600');
-    signupTab.classList.remove('bg-indigo-600');
-    signupTab.classList.add('bg-gray-800');
-    signinTab.classList.remove('bg-gray-800');
+        signinForm.classList.remove('hidden');
+        signupForm.classList.add('hidden');
+        signinTab.classList.add('bg-indigo-600');
+        signupTab.classList.remove('bg-indigo-600');
+        signupTab.classList.add('bg-gray-800');
+        signinTab.classList.remove('bg-gray-800');
     });
 
     signupTab.addEventListener('click', () => {
-    signupForm.classList.remove('hidden');
-    signinForm.classList.add('hidden');
-    signupTab.classList.add('bg-indigo-600');
-    signinTab.classList.remove('bg-indigo-600');
-    signinTab.classList.add('bg-gray-800');
-    signupTab.classList.remove('bg-gray-800');
+        signupForm.classList.remove('hidden');
+        signinForm.classList.add('hidden');
+        signupTab.classList.add('bg-indigo-600');
+        signinTab.classList.remove('bg-indigo-600');
+        signinTab.classList.add('bg-gray-800');
+        signupTab.classList.remove('bg-gray-800');
     });
 
     // Handle Auth forms submit

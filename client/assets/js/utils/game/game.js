@@ -1,6 +1,5 @@
 import { globals, toggle_ntf_modal } from "../globals.js"
 import { Player } from "./player.js"
-import {  controllers} from '../../controllers/index.js'
 import { Render } from "../render.js"
  
 export class Game
@@ -15,17 +14,20 @@ export class Game
         [0, 4, 8],
         [2, 4, 6]
     ]
-    constructor( mode = "local", board_size = 3)
+    constructor( mode, board_size = 3)
     {
         this.board_size = board_size
         this.board = null
-        this.players = [new Player("Unknown" || controllers.Auth.user.username, "X", this)]
+        this.players = [new Player("MySelf", "X", this)]
         this.turn = null
         this.game_over = false
         this.winner = null
         this.mode = mode
         this.socket = null
         this.roomId = null
+        this.init_time = new Date().getTime()
+        this.end_time = null
+        
 
         if (this.mode === "online") {
             if (!this.socket || !this.socket.connected) {
@@ -40,9 +42,9 @@ export class Game
 
             this.socket.on("startGame", (data) => {
                 this.roomId = data.roomId;
-                const player = new  Player("Unknown" || controllers.Auth.user.username, data.symbol, this);
+                const player = new  Player(data.name, data.symbol, this);
 
-                const opponent = new Player("Opponent", data.symbol === "X" ? "O" : "X", this);
+                const opponent = new Player(data.opponent_name, data.symbol === "X" ? "O" : "X", this);
                 opponent.mySelf = false;
 
                 this.players = [player, opponent];
@@ -57,19 +59,39 @@ export class Game
                 this.update_status("Your turn", "your-turn");
             });
 
-            this.socket.on("gameOver", ({ winner }) => {
+            this.socket.on("gameOver", async ({ winner }) => {
                 this.game_over = true
+
+                this.check_for_winner()
+                
+                const game_log = {
+                    mode: this.mode,
+                    vs: this.players.filter(p => !p.mySelf)[0].name,
+                    init: new Date(this.init_time).toLocaleString(),
+                    end: new Date(this.end_time).toLocaleString(),
+                    result: null
+                }
 
                 if (winner === 'draw') {
                     this.winner = 'draw'
                     this.update_status("It's a draw!", "draw")
+                    game_log.result = 0
                 } else {
                     const mySymbol = this.players.find(p => p.mySelf).symbol
                     const didWin = mySymbol === winner
                     this.winner = didWin ? this.players.find(p => p.mySelf) : this.players.find(p => !p.mySelf)
                     this.update_status(didWin ? "You won!" : "You lost!", didWin ? "win" : "lose")
-                    this.check_for_winner()
+                    game_log.result = didWin ? 1 : -1
                 }
+
+                console.log(game_log)
+                await fetch("/api/user/add-game-log", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(game_log)
+                })
 
                 document.getElementById('retry-btn')?.classList.remove('hidden')
             })
@@ -96,9 +118,9 @@ export class Game
 
             this.socket.on("rematchAccepted", (data) => {
                 toggle_ntf_modal(false)
-                const player = new  Player("Unknown" || controllers.Auth.user.username, data.symbol, this);
+                const player = new  Player(data.name, data.symbol, this);
 
-                const opponent = new Player("Opponent", data.symbol === "X" ? "O" : "X", this);
+                const opponent = new Player(data.opponent_name, data.symbol === "X" ? "O" : "X", this);
                 opponent.mySelf = false;
 
                 this.players = [player, opponent];
@@ -171,7 +193,6 @@ export class Game
             panel.classList.add("bg-gray-600");
         }
     }
-
 
     create_board()
     {
@@ -246,7 +267,7 @@ export class Game
         return cells
     }
 
-    make_move(move, symbol)
+    async make_move(move, symbol)
     {
         if (!this.board || !this.turn || !this.players.length) {
             console.warn("The game has not been initialized properly.")
@@ -292,19 +313,38 @@ export class Game
             }
         } else {
             const status = {message: "Game over", variant: "default"}
+            const game_log = {
+                mode: this.mode,
+                vs: this.players.filter(p => !p.mySelf)[0].name,
+                init: new Date(this.init_time).toLocaleString(),
+                end: new Date(this.end_time).toLocaleString(),
+                result: null
+            }
 
             if(this.winner == 'draw')
             {
                 status.message = "It's a draw!"
                 status.variant = "draw"
+                game_log.result = 0
             } else if(this.winner.mySelf)
             {
                 status.message = "You won!"
                 status.variant = "win"
+                game_log.result = 1
             } else {
                 status.message = "You lost!"
                 status.variant = "lose"
+                game_log.result = -1
             }
+
+            console.log(game_log)
+            await fetch("/api/user/add-game-log", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(game_log)
+            })
 
             this.update_status(status.message, status.variant)
 
@@ -331,6 +371,8 @@ export class Game
                 this.board[b].classList.add('win');
                 this.board[c].classList.add('win');
 
+                this.end_time = new Date().getTime()
+
                 return;
             }
         }
@@ -339,6 +381,9 @@ export class Game
         if (this.board.every(cell => cell.textContent !== '')) {
             this.game_over = true;
             this.winner = 'draw';
+
+            this.end_time = new Date().getTime()
+
             return;
         }
 
