@@ -4,11 +4,11 @@ export class PC
 {
     constructor(symbol, game, level = 3)
     {
-        this.name = "Bot"
         this.symbol = symbol;
         this.game = game;
         this.isBot = true;
         this.level = level;
+        this.name = `Bot ${this.level}`
         this.move = null;
 
         switch(this.level)

@@ -70,11 +70,11 @@ const userSchema = mongoose.Schema({
             level: {
               type: Number,
               required: true
-            },
-            ranking: {
-              type: Number,
-              required: true
             }
+          },
+          default: {
+            xp: 0,
+            level: 0
           }
         }
     },
