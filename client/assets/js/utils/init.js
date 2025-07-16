@@ -39,6 +39,13 @@ export const home_auth_init = () => {
 }
 
 export const profile_auth_init = () => {
+    const user = controllers.Auth.user
+
+    document.getElementById('username').innerText = user.username
+    document.getElementById('name').innerText = user.fullName
+    document.getElementById('xp').innerText = user.stats.xp
+    document.getElementById('level').innerText = user.stats.level
+
     document.getElementById('logout-btn').addEventListener('click', () => {
         new controllers.Auth().logout()
     })
