@@ -1,5 +1,6 @@
 import express from 'express'
 import authRoutes from './routes/auth.route.js'
+import gameRoutes from './routes/game.route.js'
 import userRoutes from './routes/user.route.js'
 import dotenv from 'dotenv'
 import { connect as connectDB } from './lib/db.js'
@@ -22,6 +23,7 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.use("/api/auth", authRoutes)
+app.use("/api/game", gameRoutes)
 app.use("/api/user", userRoutes)
 
 let awaiting_player = null

@@ -1,7 +1,6 @@
 import User from "../models/user.model.js"
 import bcryptjs from 'bcryptjs'
 import { generate_token } from "../lib/utils.js"
-import cloudinary from "../lib/cloudinary.js"
 
 
 
@@ -98,37 +97,6 @@ export const signout = (req, res) => {
         res.status(200).json({ message: "Signed out successful!" })
     } catch (error) {
         console.error("Signout controller error: ", error)
-        res.status(500).json({ message: "Internal Server Error" })
-    }
-}
-
-
-export const update_profile = async (req, res) => {
-    const {profilePic} = req.body
-    const user = req.user
-        
-    try {
-        // valid data?
-        if(!profilePic) return res.status(400).json({ message: "Profile picture is required!" })
-
-        // update user
-        if(req.user.profilePic.name) await cloudinary.uploader.destroy(req.user.profilePic.name)
-        const updated_user_profile = await cloudinary.uploader.upload(profilePic, {
-            folder: "tech_games",
-            public_id: `profile_pic_${user._id}`
-        })
-
-        const updated_user = await User.findByIdAndUpdate(user._id, {
-            profilePic: {
-                name: updated_user_profile.public_id,
-                uri: updated_user_profile.secure_url
-            }
-        }, {new: true})
-
-        res.status(200).json(updated_user)
-        
-    } catch (error) {
-        console.error("Update profile controller error: ", error)
         res.status(500).json({ message: "Internal Server Error" })
     }
 }
