@@ -74,7 +74,7 @@ const userSchema = mongoose.Schema({
           },
           default: {
             xp: 0,
-            level: 0
+            level: 1
           }
         }
     },

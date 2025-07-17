@@ -46,6 +46,23 @@ export const profile_auth_init = () => {
     document.getElementById('xp').innerText = user.stats.xp
     document.getElementById('level').innerText = user.stats.level
 
+    const games = {
+        pc: user.games.filter(game => game.mode == "pc"),
+        local: user.games.filter(game => game.mode == "local"),
+        online: user.games.filter(game => game.mode == "online")
+    }
+
+    for(let game of Object.keys(games)){
+        document.getElementById(`${game}-wins`).innerText = games[game].filter(game => game.result == 1).length
+        document.getElementById(`${game}-draws`).innerText = games[game].filter(game => game.result == 0).length
+        document.getElementById(`${game}-losses`).innerText = games[game].filter(game => game.result == -1).length
+    }
+
+    const nxt_lv_p = Math.floor((((user.stats.xp / (1000 * (user.stats.level + 1))) * 100) / 2))
+
+    document.getElementById("next-lv-p").style.width = `${nxt_lv_p}%`
+    document.getElementById("next-lv-pp").innerText = `${nxt_lv_p}`
+
     document.getElementById('logout-btn').addEventListener('click', () => {
         new controllers.Auth().logout()
     })

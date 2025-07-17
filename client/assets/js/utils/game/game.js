@@ -84,7 +84,6 @@ export class Game
                     game_log.result = didWin ? 1 : -1
                 }
 
-                console.log(game_log)
                 await fetch("/api/user/add-game-log", {
                     method: "POST",
                     headers: {
@@ -337,7 +336,6 @@ export class Game
                 game_log.result = -1
             }
 
-            console.log(game_log)
             await fetch("/api/user/add-game-log", {
                 method: "POST",
                 headers: {

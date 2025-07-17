@@ -8,6 +8,4 @@ export default async function vs_pc_game()
 
     game.players.push(pc)
     game.reset_game()
-
-    console.log(game);
 }

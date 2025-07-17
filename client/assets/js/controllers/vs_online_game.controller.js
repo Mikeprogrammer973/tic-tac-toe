@@ -9,8 +9,6 @@ export default async function vs_online_game()
     if(controllers.Auth.logged)
     {
         const game = new Game("online")
-
-        console.log(game);
     } else {
         new Render().notification({
             title: "Error",

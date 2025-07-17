@@ -26,13 +26,14 @@ export const add_game_log = (req, res) => {
                 user.stats.xp += Math.floor(((result * 100 * (user.stats.level + 1)) / 7) * bonus)
                 break
             case 0:
-                user.stats.xp += 7
+                user.stats.xp += 7 * (user.stats.level + 1)
                 break
             default:
-                user.stats.xp -= 7
+                user.stats.xp -= 7 * (user.stats.level + 1)
         }
 
-        user.stats.level = Math.floor(user.stats.xp / 1000)
+        const lv_up = (Math.floor(user.stats.xp / (1000 * (user.stats.level + 1)))) - user.stats.level
+        user.stats.level += lv_up > 0 ? lv_up : 0
 
         user.games.push(game_log)
 
