@@ -9,6 +9,4 @@ export default async function vs_local_game()
 
     game.players.push(opponent)
     game.reset_game()
-
-    console.log(game);
 }
