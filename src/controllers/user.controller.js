@@ -32,7 +32,7 @@ export const add_game_log = (req, res) => {
                 user.stats.xp -= 7 * (user.stats.level + 1)
         }
 
-        const lv_up = (Math.floor(user.stats.xp / (1000 * (user.stats.level + 1)))) - user.stats.level
+        const lv_up = (Math.floor(user.stats.xp / (1000 * (user.stats.level + 1)))) - 1
         user.stats.level += lv_up > 0 ? lv_up : 0
 
         user.games.push(game_log)
