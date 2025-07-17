@@ -185,7 +185,7 @@
     <script src="/socket.io/socket.io.js"></script>
     <script defer type="module" src="./assets/js/main.js"></script>
     <script>
-        const tabs = ["general", "account", "notifications", "privacy", "about"];
+        const tabs = ["account", "notifications", "privacy", "about"];
         function switch_settings_tab(tab) {
             tabs.forEach(t => {
             document.getElementById(`tab-${t}`).classList.toggle("text-white", t === tab);

@@ -1,6 +1,7 @@
 import { globals, toggle_ntf_modal } from "../globals.js"
 import { Player } from "./player.js"
 import { Render } from "../render.js"
+import { Game as GameController } from "../../controllers/game.controller.js"
  
 export class Game
 {
@@ -84,13 +85,7 @@ export class Game
                     game_log.result = didWin ? 1 : -1
                 }
 
-                await fetch("/api/user/add-game-log", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(game_log)
-                })
+                await new GameController().add_game_log(game_log)
 
                 document.getElementById('retry-btn')?.classList.remove('hidden')
             })
@@ -336,13 +331,7 @@ export class Game
                 game_log.result = -1
             }
 
-            await fetch("/api/user/add-game-log", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(game_log)
-            })
+            await new GameController().add_game_log(game_log)
 
             this.update_status(status.message, status.variant)
 

@@ -5,11 +5,13 @@ import settings from "./settings.controller.js";
 import vs_pc_game from "./vs_pc_game.controller.js";
 import vs_local_game from "./vs_local_game.controller.js";
 import vs_online_game from "./vs_online_game.controller.js";
+import { User } from "./user.controller.js";
 
 export const controllers = {
     home,
     profile,
     Auth,
+    User,
     settings,
     vs_pc_game,
     vs_local_game,

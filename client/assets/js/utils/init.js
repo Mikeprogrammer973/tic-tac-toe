@@ -67,3 +67,21 @@ export const profile_auth_init = () => {
         new controllers.Auth().logout()
     })
 }
+
+export const settings_auth_init = () => {
+    const user = controllers.Auth.user
+    const user_controller = new controllers.User()
+
+    const account_form = document.getElementById('account-form')
+    //const password_form = document.getElementById('password-form')
+
+    account_form.elements[0].value = user.fullName
+    account_form.elements[1].value = user.username
+    account_form.elements[2].value = user.email
+
+    account_form.addEventListener('submit', async (e) => {
+        e.preventDefault()
+        const form_data = new FormData(e.currentTarget)
+        await user_controller.update_profile(form_data)
+    })
+}
