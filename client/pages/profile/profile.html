@@ -1,5 +1,5 @@
 
-<div class="max-w-3xl mx-auto text-white bg-gray-900 rounded-2xl shadow-2xl p-8 space-y-10">
+<div x-data="{grk_open : false}" class="max-w-3xl mx-auto text-white bg-gray-900 rounded-2xl shadow-2xl p-8 space-y-10">
     
     <div class="flex flex-wrap items-center gap-6">
       <img src="https://i.pravatar.cc/150?u=user123" alt="Avatar"
@@ -43,6 +43,78 @@
         <div class="bg-indigo-500 h-full rounded-full" id="next-lv-p" style="width: 64%"></div>
       </div>
       <p class="text-sm text-gray-400"><span id="next-lv-pp">64</span>% to next level</p>
+    </div>
+
+    <div @click="grk_open = true" class="flex items-center gap-4 rounded-lg bg-black hover:bg-white text-white hover:text-blue-500 py-4 px-6 cursor-pointer">
+      <svg class="svg-icon" viewBox="0 0 20 20">
+        <path fill="none" d="M12.173,16.086c0.72,0,1.304-0.584,1.304-1.305V6.089c0-0.72-0.584-1.304-1.304-1.304c-0.721,0-1.305,0.584-1.305,1.304v8.692C10.868,15.502,11.452,16.086,12.173,16.086z M11.738,6.089c0-0.24,0.194-0.435,0.435-0.435s0.435,0.194,0.435,0.435v8.692c0,0.24-0.194,0.436-0.435,0.436s-0.435-0.195-0.435-0.436V6.089zM16.52,16.086c0.72,0,1.304-0.584,1.304-1.305v-11.3c0-0.72-0.584-1.304-1.304-1.304c-0.721,0-1.305,0.584-1.305,1.304v11.3C15.215,15.502,15.799,16.086,16.52,16.086z M16.085,3.481c0-0.24,0.194-0.435,0.435-0.435s0.435,0.195,0.435,0.435v11.3c0,0.24-0.194,0.436-0.435,0.436s-0.435-0.195-0.435-0.436V3.481z M3.48,16.086c0.72,0,1.304-0.584,1.304-1.305v-3.477c0-0.72-0.584-1.304-1.304-1.304c-0.72,0-1.304,0.584-1.304,1.304v3.477C2.176,15.502,2.76,16.086,3.48,16.086z M3.045,11.305c0-0.24,0.194-0.435,0.435-0.435c0.24,0,0.435,0.194,0.435,0.435v3.477c0,0.24-0.195,0.436-0.435,0.436c-0.24,0-0.435-0.195-0.435-0.436V11.305z M18.258,16.955H1.741c-0.24,0-0.435,0.194-0.435,0.435s0.194,0.435,0.435,0.435h16.517c0.24,0,0.435-0.194,0.435-0.435S18.498,16.955,18.258,16.955z M7.826,16.086c0.72,0,1.304-0.584,1.304-1.305V8.696c0-0.72-0.584-1.304-1.304-1.304S6.522,7.977,6.522,8.696v6.085C6.522,15.502,7.106,16.086,7.826,16.086z M7.392,8.696c0-0.239,0.194-0.435,0.435-0.435s0.435,0.195,0.435,0.435v6.085c0,0.24-0.194,0.436-0.435,0.436s-0.435-0.195-0.435-0.436V8.696z"></path>
+      </svg>
+      Global ranking
+    </div>
+
+    <div x-show="grk_open" id="global-rk" class="absolute top-0 left-0 w-full min-h-screen bg-white z-50">
+       <div class="sticky top-0 bg-gray-100 text-blue-500 text-xl px-4 py-10 flex gap-4 items-center justify-between border-b-[1px] border-gray-200">
+          <p class="flex items-center gap-4">
+            <svg class="svg-icon" viewBox="0 0 20 20">
+							<path fill="none" d="M12.173,16.086c0.72,0,1.304-0.584,1.304-1.305V6.089c0-0.72-0.584-1.304-1.304-1.304c-0.721,0-1.305,0.584-1.305,1.304v8.692C10.868,15.502,11.452,16.086,12.173,16.086z M11.738,6.089c0-0.24,0.194-0.435,0.435-0.435s0.435,0.194,0.435,0.435v8.692c0,0.24-0.194,0.436-0.435,0.436s-0.435-0.195-0.435-0.436V6.089zM16.52,16.086c0.72,0,1.304-0.584,1.304-1.305v-11.3c0-0.72-0.584-1.304-1.304-1.304c-0.721,0-1.305,0.584-1.305,1.304v11.3C15.215,15.502,15.799,16.086,16.52,16.086z M16.085,3.481c0-0.24,0.194-0.435,0.435-0.435s0.435,0.195,0.435,0.435v11.3c0,0.24-0.194,0.436-0.435,0.436s-0.435-0.195-0.435-0.436V3.481z M3.48,16.086c0.72,0,1.304-0.584,1.304-1.305v-3.477c0-0.72-0.584-1.304-1.304-1.304c-0.72,0-1.304,0.584-1.304,1.304v3.477C2.176,15.502,2.76,16.086,3.48,16.086z M3.045,11.305c0-0.24,0.194-0.435,0.435-0.435c0.24,0,0.435,0.194,0.435,0.435v3.477c0,0.24-0.195,0.436-0.435,0.436c-0.24,0-0.435-0.195-0.435-0.436V11.305z M18.258,16.955H1.741c-0.24,0-0.435,0.194-0.435,0.435s0.194,0.435,0.435,0.435h16.517c0.24,0,0.435-0.194,0.435-0.435S18.498,16.955,18.258,16.955z M7.826,16.086c0.72,0,1.304-0.584,1.304-1.305V8.696c0-0.72-0.584-1.304-1.304-1.304S6.522,7.977,6.522,8.696v6.085C6.522,15.502,7.106,16.086,7.826,16.086z M7.392,8.696c0-0.239,0.194-0.435,0.435-0.435s0.435,0.195,0.435,0.435v6.085c0,0.24-0.194,0.436-0.435,0.436s-0.435-0.195-0.435-0.436V8.696z"></path>
+						</svg>
+            Global ranking
+          </p>
+          <button @click="grk_open = false" class="hover:cursor-pointer">
+            <svg class="svg-icon" viewBox="0 0 20 20">
+							<path fill="none" d="M15.898,4.045c-0.271-0.272-0.713-0.272-0.986,0l-4.71,4.711L5.493,4.045c-0.272-0.272-0.714-0.272-0.986,0s-0.272,0.714,0,0.986l4.709,4.711l-4.71,4.711c-0.272,0.271-0.272,0.713,0,0.986c0.136,0.136,0.314,0.203,0.492,0.203c0.179,0,0.357-0.067,0.493-0.203l4.711-4.711l4.71,4.711c0.137,0.136,0.314,0.203,0.494,0.203c0.178,0,0.355-0.067,0.492-0.203c0.273-0.273,0.273-0.715,0-0.986l-4.711-4.711l4.711-4.711C16.172,4.759,16.172,4.317,15.898,4.045z"></path>
+						</svg>
+          </button>
+       </div>
+       <div class="px-4 py-10 space-y-4">
+          <div class="bg-gray-800 flex items-center justify-between gap-4 p-2 rounded-lg sm:w-[70%] md:w-[60%]">
+            <div class=" flex items-center gap-4 p-2">
+              <img src="https://i.pravatar.cc/150?u=user123" alt="Avatar"
+              class="w-16 h-16 rounded-full border-4 border-indigo-500 shadow-lg" />
+              <div>
+                <p class="text-gray-200 text-lg break-all">Username</p>
+                <p class="break-all text-gray-300 text-sm">Name</p>
+              </div>
+              <div>
+                <p class="text-gray-200 text-lg break-all text-indigo-300">56,9K xp</p>
+                <p class="break-all text-gray-300 text-sm">Level 1</p>
+              </div>
+            </div>
+            <p class="text-2xl rounded-xl text-white bg-indigo-500 p-2">#1</p>
+          </div>
+          
+          <div class="bg-gray-800 flex items-center justify-between gap-4 p-2 rounded-lg sm:w-[70%] md:w-[60%]">
+            <div class=" flex items-center gap-4 p-2">
+              <img src="https://i.pravatar.cc/150?u=user123" alt="Avatar"
+              class="w-16 h-16 rounded-full border-4 border-indigo-500 shadow-lg" />
+              <div>
+                <p class="text-gray-200 text-lg break-all">Username</p>
+                <p class="break-all text-gray-300 text-sm">Name</p>
+              </div>
+              <div>
+                <p class="text-gray-200 text-lg break-all text-indigo-300">56,9K xp</p>
+                <p class="break-all text-gray-300 text-sm">Level 1</p>
+              </div>
+            </div>
+            <p class="text-2xl rounded-xl text-white bg-indigo-500 p-2">#2</p>
+          </div>
+
+          <div class="bg-gray-800 flex items-center justify-between gap-4 p-2 rounded-lg sm:w-[70%] md:w-[60%]">
+            <div class=" flex items-center gap-4 p-2">
+              <img src="https://i.pravatar.cc/150?u=user123" alt="Avatar"
+              class="w-16 h-16 rounded-full border-4 border-indigo-500 shadow-lg" />
+              <div>
+                <p class="text-gray-200 text-lg break-all">Username</p>
+                <p class="break-all text-gray-300 text-sm">Name</p>
+              </div>
+              <div>
+                <p class="text-gray-200 text-lg break-all text-indigo-300">56,9K xp</p>
+                <p class="break-all text-gray-300 text-sm">Level 1</p>
+              </div>
+            </div>
+            <p class="text-2xl rounded-xl text-white bg-indigo-500 p-2">#3</p>
+          </div>
+       </div>
     </div>
     
     <div class="flex justify-end gap-4">
