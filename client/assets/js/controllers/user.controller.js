@@ -47,4 +47,11 @@ export class User
         }
     }
 
+    async get_global_ranking(){
+        globals.spinner(true)
+        const rk_users = await (await fetch('/api/user/global-ranking')).json()
+        globals.spinner(false)
+
+        return rk_users
+    }
 }

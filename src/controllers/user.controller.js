@@ -39,7 +39,6 @@ export const update_profile = async (req, res) => {
     }
 }
 
-
 export const update_profile_image = async (req, res) => {
     const {profilePic} = req.body
     const user = req.user
@@ -67,5 +66,14 @@ export const update_profile_image = async (req, res) => {
     } catch (error) {
         console.error("Update profile controller error: ", error)
         res.status(500).json({ message: "Internal Server Error" })
+    }
+}
+
+export const get_global_ranking = async (req, res) => {
+    try {
+        res.status(200).json((await User.find()).filter(user => user.prefs._public))
+    } catch (error) {
+        console.log('Get global ranking cntroller error: ', error)
+        res.status(500).json({message: 'Internal Server Error'})
     }
 }

@@ -38,7 +38,7 @@ export const home_auth_init = () => {
     })
 }
 
-export const profile_auth_init = () => {
+export const profile_auth_init = async () => {
     const user = controllers.Auth.user
 
     document.getElementById('username').innerText = user.username
@@ -66,6 +66,36 @@ export const profile_auth_init = () => {
     document.getElementById('logout-btn').addEventListener('click', () => {
         new controllers.Auth().logout()
     })
+
+    document.getElementById('get-gb-rk').addEventListener('click', async () => {
+        const rk_users = await new controllers.User().get_global_ranking()
+
+        let rk_content = ''
+
+        for(let rk_user of rk_users)
+        {
+            rk_content += `<div class="bg-gray-800 flex items-center justify-between gap-4 p-2 rounded-lg sm:w-[70%] md:w-[60%]">
+                <div class=" flex items-center gap-4 p-2">
+                <img src="https://i.pravatar.cc/150?u=user123" alt="Avatar"
+                class="w-16 h-16 rounded-full border-4 border-indigo-500 shadow-lg" />
+                <div>
+                    <p class="text-gray-200 text-lg break-all"> ${rk_user.username} </p>
+                    <p class="break-all text-gray-300 text-sm"> ${rk_user.fullName} </p>
+                </div>
+                <div>
+                    <p class="text-gray-200 text-lg break-all text-indigo-300"> ${rk_user.stats.xp} xp</p>
+                    <p class="break-all text-gray-300 text-sm">Level ${rk_user.stats.level} </p>
+                </div>
+                </div>
+                <p class="text-2xl rounded-xl text-white bg-indigo-500 p-2">#3</p>
+            </div>
+            `
+        }
+
+        document.getElementById('global-rk').innerHTML = rk_content
+    })
+
+    
 }
 
 export const settings_auth_init = () => {
