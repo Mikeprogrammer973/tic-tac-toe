@@ -76,6 +76,25 @@ const userSchema = mongoose.Schema({
             xp: 0,
             level: 1
           }
+        },
+        prefs: {
+          type: {
+            _2fa: {
+              type: Boolean,
+              required: true
+            },
+            _2fa_secret: {
+              type: String
+            },
+            _public: {
+              type: Boolean,
+              required: true
+            }
+          },
+          default: {
+            _2fa: false,
+            _public: true
+          }
         }
     },
     { timestamps: true }
