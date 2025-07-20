@@ -23,3 +23,20 @@ export const globals = {
 export function toggle_ntf_modal(show) {
     globals.notification.container.classList.toggle("hidden", !show);
 }
+
+export function format_xp(xp) {
+    let formatted_xp = xp
+    
+    if(xp >= 1000)
+    {
+        formatted_xp = (xp / 1000).toFixed(2) + "K"
+    } else if(xp >= 1000000){
+        formatted_xp = (xp / 1000000).toFixed(2) + "M"
+    } else if(xp >= 1000000000){
+        formatted_xp = (xp / 1000000000).toFixed(2) + "B"
+    }
+
+    return formatted_xp
+}
+
+

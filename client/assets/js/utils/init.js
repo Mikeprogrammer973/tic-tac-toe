@@ -1,4 +1,5 @@
 import { controllers } from '../controllers/index.js' 
+import { format_xp } from './globals.js';
 
 export const home_auth_init = () => {
     const signinTab = document.getElementById('tab-signin');
@@ -43,7 +44,7 @@ export const profile_auth_init = async () => {
 
     document.getElementById('username').innerText = user.username
     document.getElementById('name').innerText = user.fullName
-    document.getElementById('xp').innerText = user.stats.xp
+    document.getElementById('xp').innerText = format_xp(user.stats.xp)
     document.getElementById('level').innerText = user.stats.level
 
     const games = {
@@ -68,29 +69,31 @@ export const profile_auth_init = async () => {
     })
 
     document.getElementById('get-gb-rk').addEventListener('click', async () => {
-        const rk_users = await new controllers.User().get_global_ranking()
+        const rk_users = (await new controllers.User().get_global_ranking()).sort((a, b) => {
+            if (b.stats.level !== a.stats.level) return b.stats.level - a.stats.level;
+            return b.stats.xp - a.stats.xp;
+        })
 
         let rk_content = ''
 
-        for(let rk_user of rk_users)
-        {
-            rk_content += `<div class="bg-gray-800 flex items-center justify-between gap-4 p-2 rounded-lg sm:w-[70%] md:w-[60%]">
+        rk_users.forEach((rk_user, index) => {
+            rk_content += `<div class="bg-gray-800 flex items-center justify-between gap-4 p-2 rounded-lg">
                 <div class=" flex items-center gap-4 p-2">
-                <img src="https://i.pravatar.cc/150?u=user123" alt="Avatar"
-                class="w-16 h-16 rounded-full border-4 border-indigo-500 shadow-lg" />
-                <div>
-                    <p class="text-gray-200 text-lg break-all"> ${rk_user.username} </p>
-                    <p class="break-all text-gray-300 text-sm"> ${rk_user.fullName} </p>
+                    <img src="https://i.pravatar.cc/150?u=user123" alt="Avatar"
+                    class="w-16 h-16 rounded-full border-4 border-indigo-500 shadow-lg" />
+                    <div>
+                        <p title="${rk_user.username}" class="text-gray-200 text-lg max-w-32 overflow-hidden text-ellipsis"> ${rk_user.username} </p>
+                        <p title="${rk_user.fullName}" class="max-w-32 overflow-hidden text-ellipsis text-gray-300 text-sm"> ${rk_user.fullName} </p>
+                    </div>
+                    <div>
+                        <p title="${format_xp(rk_user.stats.xp)}" class="text-gray-200 text-lg max-w-32 overflow-hidden text-ellipsis text-indigo-300"> ${format_xp(rk_user.stats.xp)}</p>
+                        <p title="Lv ${rk_user.stats.level}" class="max-w-32 overflow-hidden text-ellipsis text-gray-300 text-sm">Lv ${rk_user.stats.level} </p>
+                    </div>
                 </div>
-                <div>
-                    <p class="text-gray-200 text-lg break-all text-indigo-300"> ${rk_user.stats.xp} xp</p>
-                    <p class="break-all text-gray-300 text-sm">Level ${rk_user.stats.level} </p>
-                </div>
-                </div>
-                <p class="text-2xl rounded-xl text-white bg-indigo-500 p-2">#3</p>
+                <p class="text-2xl rounded-lg text-white bg-indigo-500 p-2">#${index + 1}</p>
             </div>
             `
-        }
+        })
 
         document.getElementById('global-rk').innerHTML = rk_content
     })
