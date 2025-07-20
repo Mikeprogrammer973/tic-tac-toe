@@ -83,6 +83,9 @@ const userSchema = mongoose.Schema({
               type: Boolean,
               required: true
             },
+            _2fa_secret: {
+              type: String
+            },
             _public: {
               type: Boolean,
               required: true

@@ -43,6 +43,67 @@ export class Auth
         })).json()
         globals.spinner(false)
 
+        if(result.requires2fa){
+            render.notification({
+                title: "2FA Authentication Required",
+                msg: `<div class="space-y-2">
+                        <label for="twofa-code" class="block text-sm font-medium text-gray-300">Type in your 6-digit 2FA Authentication code to continue.</label>
+                        <input id="twofa-code" type="text" placeholder="123456"
+                        class="w-full px-4 py-2 text-gray-50 border rounded-lg focus:ring focus:ring-blue-300 outline-none">
+                    </div>
+                `,
+                action: {
+                    text: "Continue",
+                    callback: () => {
+                        const code = document.getElementById('twofa-code').value
+                        new Auth().login_2fa(user_data, code)
+                    }
+                }
+            })
+            return
+        }
+
+        if(result.username){
+            render.notification({
+                title: "Tic Tac Toe",
+                msg: "Welcome back, " + result.username + "!",
+                action: {
+                    text: "Continue",
+                    callback: () => {
+                        toggle_ntf_modal(false)
+                    }
+                }
+            })
+            Auth.redirect()
+        } else {
+            render.notification({
+                title: "Error",
+                msg: result.message,
+                action: {
+                    text: "Retry",
+                    callback: () => toggle_ntf_modal(false)
+                }
+            })
+        }
+    }
+
+    async login_2fa(user_data, code)
+    {
+        globals.spinner(true)
+        const result = await (await fetch("/api/auth/signin-2fa", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                identifier: user_data.get("identifier"),
+                password: user_data.get("password"),
+                code
+            })
+        })).json()
+        globals.spinner(false)
+
+
         if(result.username){
             render.notification({
                 title: "Tic Tac Toe",

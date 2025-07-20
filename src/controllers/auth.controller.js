@@ -1,7 +1,7 @@
 import User from "../models/user.model.js"
 import bcryptjs from 'bcryptjs'
 import { generate_token } from "../lib/utils.js"
-
+import speakeasy from 'speakeasy'
 
 
 export const signup = async (req, res) => {
@@ -72,6 +72,9 @@ export const signin = async (req, res) => {
         // check password
         if(!bcryptjs.compareSync(password, user.password)) return res.status(400).json({ message: "Invalid email or password!" })
 
+        // 2fa enabled?
+        if(user.prefs._2fa) return res.status(400).json({ requires2fa: true })
+
         // generate jwt token
         generate_token(user._id, res)
 
@@ -90,6 +93,41 @@ export const signin = async (req, res) => {
     }
 }
 
+export const signin_2fa = async (req, res) => {
+    try {
+        const {identifier, password, code} = req.body
+
+        const user = await User.findOne({username: identifier}) || await User.findOne({email: identifier})
+
+        if(!user) return res.status(400).json({ message: "Invalid username/email or password!" })
+
+        if(!bcryptjs.compareSync(password, user.password)) return res.status(400).json({ message: "Invalid email or password!" })
+        
+        const verified = speakeasy.totp.verify({
+            secret: user.prefs._2fa_secret,
+            encoding: 'base32',
+            token: code
+        })
+
+        if(!verified) return res.status(400).json({ message: "Invalid 2FA code, please try again!" })
+
+        generate_token(user._id, res)
+
+        res.status(200).json({
+            _id: user._id,
+            fullName: user.fullName,
+            email: user.email,
+            username: user.username,
+            profilePic: user.profilePic,
+            games: user.games,
+            stats: user.stats
+        })
+
+    } catch (error) {
+        console.error("Signin controller error: ", error) 
+        res.status(500).json({ message: "Internal Server Error" })
+    }
+}
 
 export const signout = (req, res) => {
     try {
