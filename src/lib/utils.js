@@ -18,7 +18,7 @@ export function generate_token(user_id, res){
 export async function create_session(user, req, auth_token)
 {
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress
-    const geo = geoip.lookup(ip)
+    const geo = geoip.lookup(ip.split(',')[0])
 
     const session = new Session({
         userId: user._id,
