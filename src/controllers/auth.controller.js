@@ -1,6 +1,7 @@
 import User from "../models/user.model.js"
+import Session from "../models/session.model.js"
 import bcryptjs from 'bcryptjs'
-import { generate_token } from "../lib/utils.js"
+import { create_session, generate_token } from "../lib/utils.js"
 import speakeasy from 'speakeasy'
 
 
@@ -34,9 +35,12 @@ export const signup = async (req, res) => {
         // new user created?
         if(new_user)
         {
-            // generate jwt token
-            generate_token(new_user._id, res)
+            // save user
             new_user.save()
+
+            const token = generate_token(new_user._id, res)
+
+            await create_session(new_user, req, token)
 
             res.status(201).json({
                 _id: new_user._id,
@@ -76,7 +80,10 @@ export const signin = async (req, res) => {
         if(user.prefs._2fa) return res.status(400).json({ requires2fa: true })
 
         // generate jwt token
-        generate_token(user._id, res)
+        const token = generate_token(user._id, res)
+
+        // create session
+        await create_session(user, req, token)
 
         res.status(200).json({
             _id: user._id,
@@ -111,7 +118,9 @@ export const signin_2fa = async (req, res) => {
 
         if(!verified) return res.status(400).json({ message: "Invalid 2FA code, please try again!" })
 
-        generate_token(user._id, res)
+        const token = generate_token(user._id, res)
+
+        await create_session(user, req, token)
 
         res.status(200).json({
             _id: user._id,
@@ -129,12 +138,44 @@ export const signin_2fa = async (req, res) => {
     }
 }
 
-export const signout = (req, res) => {
+export const signout = async (req, res) => {
     try {
+        await Session.findOneAndUpdate({userId: req.user._id, jwt: req.cookies.token}, {isRevoked: true})
         res.cookie("token", "", {maxAge:0})
         res.status(200).json({ message: "Signed out successful!" })
     } catch (error) {
         console.error("Signout controller error: ", error)
+        res.status(500).json({ message: "Internal Server Error" })
+    }
+}
+
+export const list_sessions = async (req, res) => {
+    try {
+        const sessions = await Session.find({userId: req.user._id, isRevoked: false}).sort({createdAt: -1})
+        res.status(200).json(sessions.map(session => ({
+            id: session._id,
+            userAgent: session.userAgent,
+            ipAddress: session.ipAddress,
+            createdAt: session.createdAt,
+            lastSeenAt: session.lastSeenAt,
+            current: session.jwt === req.cookies.token
+        })))
+    } catch (error) {
+        console.error("List sessions controller error: ", error)
+        res.status(500).json({ message: "Internal Server Error" })
+    }
+}
+
+export const revoke_session = async (req, res) => {
+    try {
+        const session = await Session.findById(req.params.id)
+
+        if(!session) return res.status(404).json({ message: "Session not found!" })
+        
+        session.isRevoked = true
+        session.save()
+    } catch (error) {
+        console.error("Revoke session controller error: ", error)
         res.status(500).json({ message: "Internal Server Error" })
     }
 }

@@ -104,9 +104,10 @@ export const profile_auth_init = async () => {
     
 }
 
-export const settings_auth_init = () => {
+export const settings_auth_init = async () => {
     const user = controllers.Auth.user
     const user_controller = new controllers.User()
+    const auth_controller = new controllers.Auth()
 
     const account_form = document.getElementById('account-form')
     const privacy_form = document.getElementById('privacy-form')
@@ -160,4 +161,7 @@ export const settings_auth_init = () => {
         await user_controller.disable_2fa()
     })
 
+    const sessions_list = await auth_controller.list_sessions()
+
+    console.log(sessions_list)
 }

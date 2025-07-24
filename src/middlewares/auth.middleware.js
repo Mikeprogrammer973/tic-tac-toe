@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import User from '../models/user.model.js'
+import Session from '../models/session.model.js'
 
 const auth_guardMiddleware = async (req, res, next) => {
     try 
@@ -10,12 +11,16 @@ const auth_guardMiddleware = async (req, res, next) => {
 
         // verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        const session = await Session.findOne({jwt: token, isRevoked: false})
 
-        if(!decoded) return res.status(401).json({ message: "Unauthorized - Invalid token!" })
+        if(!decoded || !session) return res.status(401).json({ message: "Unauthorized - Invalid token!" })
 
         req.user = await User.findById(decoded.user_id).select("-password")
 
         if(!req.user) return res.status(401).json({ message: "Unauthorized - User not found!" })
+
+        session.lastSeenAt = Date.now()
+        session.save()
 
         // alright
         next()
