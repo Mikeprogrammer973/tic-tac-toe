@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import Session from '../models/session.model.js'
+import geoip from 'geoip-lite'
 
 export function generate_token(user_id, res){
     const token = jwt.sign({user_id: user_id}, process.env.JWT_SECRET, {expiresIn: '7h'})
@@ -16,11 +17,19 @@ export function generate_token(user_id, res){
 
 export async function create_session(user, req, auth_token)
 {
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress
+    const geo = geoip.lookup(ip)
+
     const session = new Session({
         userId: user._id,
         jwt: auth_token,
         userAgent: req.headers['user-agent'],
-        ipAddress: req.ip,
+        ipAddress: ip,
+        location: {
+            country: geo?.country,
+            region: geo?.region,
+            city: geo?.city
+        },
         expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000
     })
 

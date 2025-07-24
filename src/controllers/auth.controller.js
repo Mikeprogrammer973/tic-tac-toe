@@ -158,6 +158,7 @@ export const list_sessions = async (req, res) => {
             ipAddress: session.ipAddress,
             createdAt: session.createdAt,
             lastSeenAt: session.lastSeenAt,
+            location: session.location,
             current: session.jwt === req.cookies.token
         })))
     } catch (error) {

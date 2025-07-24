@@ -5,6 +5,13 @@ const sessionSchema = new mongoose.Schema({
   jwt: { type: String },
   userAgent: { type: String },
   ipAddress: { type: String },
+  location: {
+    type: {
+      country: { type: String },
+      region: { type: String },
+      city: { type: String },
+    }
+  },
   createdAt: { type: Date, default: Date.now },
   expiresAt: { type: Date },
   lastSeenAt: { type: Date, default: Date.now },
