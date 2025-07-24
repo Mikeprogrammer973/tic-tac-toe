@@ -162,6 +162,54 @@ export const settings_auth_init = async () => {
     })
 
     const sessions_list = await auth_controller.list_sessions()
+    const active_sessions_container = document.getElementById('active-sessions')
 
-    console.log(sessions_list)
+    for(let session of sessions_list)
+    {
+        active_sessions_container.innerHTML += `<div class="flex gap-4 items-center justify-between flex-wrap text-sm text-gray-200 bg-black p-4 rounded-lg">
+            <div class="space-y-4">
+                <p class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M8 7V3m8 4V3m-9 8h10m-14 9h18a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H3a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2z"/>
+                  </svg>
+                  <span class="font-medium text-indigo-300">Created at:</span> ${new Date(session.createdAt).toLocaleString()}
+                </p>
+                <p class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+                  </svg>
+                  <span class="font-medium text-indigo-300">Last activity</span> ${new Date(session.lastSeenAt).toLocaleString()}
+                </p>
+                <p class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M4 4h16v16H4z"/>
+                  </svg>
+                  <span class="font-medium text-indigo-300">IP:</span> ${session.ipAddress.split(',')[0]}
+                </p>
+                <p class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M17.657 16.657L13.414 12l4.243-4.243m-11.314 0L10.586 12 6.343 16.243"/>
+                  </svg>
+                  <span class="font-medium text-indigo-300">Location:</span> ${session.location.city || session.location.country || session.location.region || 'Unknown'}
+                </p>
+                <p class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M9 12h6m2 9H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2z"/>
+                  </svg>
+                  <span class="font-medium text-indigo-300">User Agent:</span> ${session.userAgent.split('(')[0]}
+                </p>
+              </div>
+              <p>
+                <button data-id="${session.id}" class=" rvk-s-btn px-6 py-2 bg-yellow-600 hover:bg-yellow-500 rounded-lg text-white font-semibold transition">Revoke</button>
+              </p>
+            </div>
+        `
+    }
+
+    for(let btn of document.querySelectorAll('.rvk-s-btn'))
+    {
+        btn.addEventListener('click', async () => {
+           auth_controller.revoke_session(btn.dataset.id)
+        })
+    }
 }

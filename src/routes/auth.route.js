@@ -10,7 +10,7 @@ router.post("/signin-2fa", signin_2fa)
 router.post("/signout", auth_guardMiddleware, signout)
 
 router.get("/list-sessions", auth_guardMiddleware, list_sessions)
-router.post("/revoke-session/:id", auth_guardMiddleware, revoke_session)
+router.get("/revoke-session/:id", auth_guardMiddleware, revoke_session)
 
 router.get("/check", auth_guardMiddleware, check_auth)
 

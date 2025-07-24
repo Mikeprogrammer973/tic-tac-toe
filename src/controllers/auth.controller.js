@@ -175,6 +175,8 @@ export const revoke_session = async (req, res) => {
         
         session.isRevoked = true
         session.save()
+
+        res.status(200).json({ message: "Session revoked successful!" })
     } catch (error) {
         console.error("Revoke session controller error: ", error)
         res.status(500).json({ message: "Internal Server Error" })
