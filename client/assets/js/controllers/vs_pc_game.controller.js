@@ -4,13 +4,6 @@ import { Render } from "../utils/render.js"
 
 export default async function vs_pc_game()
 {
-    const game = new Game("pc")
-
-    const pc = new PC('O', game, 1)
-
-    game.players.push(pc)
-    game.reset_game()
-
     new Render().notification(
         {
             title: "Level Selection",
