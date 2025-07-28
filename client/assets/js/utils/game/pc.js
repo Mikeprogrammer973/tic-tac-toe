@@ -2,7 +2,7 @@ import { Game } from "./game.js";
 
 export class PC
 {
-    constructor(symbol, game, level = 3)
+    constructor(symbol, game, level)
     {
         this.symbol = symbol;
         this.game = game;

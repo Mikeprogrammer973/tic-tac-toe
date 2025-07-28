@@ -188,7 +188,7 @@ export class Auth
         })
         globals.spinner(false)
         
-        Auth.redirect(["home", "Home"])
+        location.reload()
     }
 
     async logout()

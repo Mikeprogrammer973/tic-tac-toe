@@ -1,4 +1,6 @@
 import User from "../models/user.model.js"
+import Session from "../models/session.model.js"
+import Game from "../models/game.model.js"
 import cloudinary from "../lib/cloudinary.js"
 import speakeasy from 'speakeasy'
 import qrcode from 'qrcode'
@@ -145,6 +147,23 @@ export const disable_2fa = async (req, res) => {
         res.status(200).json(req.user)
     } catch (error) {
         console.log('Disable 2fa cntroller error: ', error)
+        res.status(500).json({message: 'Internal Server Error'})
+    }
+}
+
+export const delete_account = async (req, res) => {
+    try {
+        const user = req.user
+
+        if(user.profilePic.name) await cloudinary.uploader.destroy(user.profilePic.name)
+        await Session.deleteMany({userId: user._id}, {strict: false})
+        await Game.deleteMany({userId: user._id}, {strict: false})
+
+        await User.findByIdAndDelete(user._id)
+
+        res.status(200).json({message: 'Account deleted successfully!'})
+    } catch (error) {
+        console.log('Delete account controller error: ', error)
         res.status(500).json({message: 'Internal Server Error'})
     }
 }

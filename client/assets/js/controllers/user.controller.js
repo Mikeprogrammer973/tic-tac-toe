@@ -178,4 +178,23 @@ export class User
 
         return rk_users
     }
+
+    async delete_account()
+    {
+        render.notification({
+            title: "Confirm Delete Account",
+            msg: "Are you sure you want to delete your account?",
+            action: {
+                text: "Delete",
+                callback: async () => {
+                    globals.spinner(true)
+                    await fetch('/api/user/delete-account', {
+                        method: 'DELETE'
+                    })
+                    globals.spinner(false)
+                    new Auth().logout()
+                }
+            }
+        })
+    }
 }

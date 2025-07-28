@@ -33,34 +33,6 @@ const userSchema = mongoose.Schema({
               uri: ""
             }
         },
-        games: {
-          type: [
-            {
-              mode: {
-                type: String,
-                required: true
-              },
-              vs: {
-                type: String,
-                required: true
-              },
-              date: {
-                init: {
-                  type: String,
-                  required: true
-                },
-                end: {
-                  type: String,
-                  required: true
-                }
-              },
-              result: {
-                type: Number,
-                required: true
-              }
-            }
-          ]
-        },
         stats: {
           type: {
             xp: {
@@ -70,11 +42,28 @@ const userSchema = mongoose.Schema({
             level: {
               type: Number,
               required: true
+            },
+            nxt_lv_xp: {
+              type: {
+                _goal: {
+                  type: Number,
+                  required: true
+                },
+                _current: {
+                  type: Number,
+                  required: true
+                }
+              },
+              required: true
             }
           },
           default: {
             xp: 0,
-            level: 1
+            level: 1,
+            nxt_lv_xp: {
+              _goal: 1000,
+              _current: 0
+            }
           }
         },
         prefs: {

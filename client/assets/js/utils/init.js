@@ -1,3 +1,4 @@
+import { Game } from '../controllers/game.controller.js';
 import { controllers } from '../controllers/index.js' 
 import { format_xp } from './globals.js';
 import { Render } from './render.js';
@@ -44,6 +45,7 @@ export const home_auth_init = () => {
 
 export const profile_auth_init = async () => {
     const user = controllers.Auth.user
+    user.games = await new Game().get_games_log()
 
     document.getElementById('username').innerText = user.username
     document.getElementById('name').innerText = user.fullName
@@ -62,7 +64,10 @@ export const profile_auth_init = async () => {
         document.getElementById(`${game}-losses`).innerText = games[game].filter(game => game.result == -1).length
     }
 
-    const nxt_lv_p = Math.floor((((user.stats.xp / (1000 * (user.stats.level + 1) * 7)) * 100) / 2))
+    let nxt_lv_p = Math.floor(user.stats.nxt_lv_xp._current / user.stats.nxt_lv_xp._goal * 100)
+
+    if(nxt_lv_p < 0) nxt_lv_p = 0
+    if(nxt_lv_p > 100) nxt_lv_p = 100
 
     document.getElementById("next-lv-p").style.width = `${nxt_lv_p}%`
     document.getElementById("next-lv-pp").innerText = `${nxt_lv_p}`
@@ -98,6 +103,8 @@ export const profile_auth_init = async () => {
             `
         })
 
+        if(rk_users.length == 0) rk_content = '<p class="text-gray-500 p-4 text-lg font-bolder">No users found!</p>'
+
         document.getElementById('global-rk').innerHTML = rk_content
     })
 
@@ -109,10 +116,11 @@ export const settings_auth_init = async () => {
     const user_controller = new controllers.User()
     const auth_controller = new controllers.Auth()
 
+    // elements
     const account_form = document.getElementById('account-form')
     const privacy_form = document.getElementById('privacy-form')
     
-
+    // account
     account_form.elements[0].value = user.fullName
     account_form.elements[1].value = user.username
     account_form.elements[2].value = user.email
@@ -123,6 +131,11 @@ export const settings_auth_init = async () => {
         await user_controller.update_profile(form_data)
     })
 
+    document.getElementById('delete-account-btn').addEventListener('click', async () => {
+        await user_controller.delete_account()
+    })
+
+    // privacy & security
     privacy_form.elements[0].checked = user.prefs._public
 
     privacy_form.addEventListener('submit', async (e) => {
@@ -166,7 +179,7 @@ export const settings_auth_init = async () => {
 
     for(let session of sessions_list)
     {
-        active_sessions_container.innerHTML += `<div class="flex gap-4 items-center justify-between flex-wrap text-sm text-gray-200 bg-black p-4 rounded-lg">
+        active_sessions_container.innerHTML += `<div class="flex gap-4 items-center justify-between flex-wrap text-sm text-gray-200 bg-${session.current ? 'indigo-900' : 'black'} p-4 rounded-lg">
             <div class="space-y-4">
                 <p class="flex items-center gap-2">
                   <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
