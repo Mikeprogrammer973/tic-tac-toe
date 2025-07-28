@@ -1,3 +1,4 @@
+import { Game } from '../controllers/game.controller.js';
 import { controllers } from '../controllers/index.js' 
 import { format_xp } from './globals.js';
 import { Render } from './render.js';
@@ -44,6 +45,7 @@ export const home_auth_init = () => {
 
 export const profile_auth_init = async () => {
     const user = controllers.Auth.user
+    user.games = await new Game().get_games_log()
 
     document.getElementById('username').innerText = user.username
     document.getElementById('name').innerText = user.fullName
@@ -62,7 +64,10 @@ export const profile_auth_init = async () => {
         document.getElementById(`${game}-losses`).innerText = games[game].filter(game => game.result == -1).length
     }
 
-    const nxt_lv_p = Math.floor((((user.stats.xp / (1000 * (user.stats.level + 1) * 7)) * 100) / 2))
+    let nxt_lv_p = Math.floor(user.stats.nxt_lv_xp._current / user.stats.nxt_lv_xp._goal * 100)
+
+    if(nxt_lv_p < 0) nxt_lv_p = 0
+    if(nxt_lv_p > 100) nxt_lv_p = 100
 
     document.getElementById("next-lv-p").style.width = `${nxt_lv_p}%`
     document.getElementById("next-lv-pp").innerText = `${nxt_lv_p}`
@@ -98,20 +103,24 @@ export const profile_auth_init = async () => {
             `
         })
 
+        if(rk_users.length == 0) rk_content = '<p class="text-gray-500 p-4 text-lg font-bolder">No users found!</p>'
+
         document.getElementById('global-rk').innerHTML = rk_content
     })
 
     
 }
 
-export const settings_auth_init = () => {
+export const settings_auth_init = async () => {
     const user = controllers.Auth.user
     const user_controller = new controllers.User()
+    const auth_controller = new controllers.Auth()
 
+    // elements
     const account_form = document.getElementById('account-form')
     const privacy_form = document.getElementById('privacy-form')
     
-
+    // account
     account_form.elements[0].value = user.fullName
     account_form.elements[1].value = user.username
     account_form.elements[2].value = user.email
@@ -122,6 +131,11 @@ export const settings_auth_init = () => {
         await user_controller.update_profile(form_data)
     })
 
+    document.getElementById('delete-account-btn').addEventListener('click', async () => {
+        await user_controller.delete_account()
+    })
+
+    // privacy & security
     privacy_form.elements[0].checked = user.prefs._public
 
     privacy_form.addEventListener('submit', async (e) => {
@@ -160,4 +174,55 @@ export const settings_auth_init = () => {
         await user_controller.disable_2fa()
     })
 
+    const sessions_list = await auth_controller.list_sessions()
+    const active_sessions_container = document.getElementById('active-sessions')
+
+    for(let session of sessions_list)
+    {
+        active_sessions_container.innerHTML += `<div class="flex gap-4 items-center justify-between flex-wrap text-sm text-gray-200 bg-${session.current ? 'indigo-900' : 'black'} p-4 rounded-lg">
+            <div class="space-y-4">
+                <p class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M8 7V3m8 4V3m-9 8h10m-14 9h18a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H3a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2z"/>
+                  </svg>
+                  <span class="font-medium text-indigo-300">Created at:</span> ${new Date(session.createdAt).toLocaleString()}
+                </p>
+                <p class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+                  </svg>
+                  <span class="font-medium text-indigo-300">Last activity</span> ${new Date(session.lastSeenAt).toLocaleString()}
+                </p>
+                <p class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M4 4h16v16H4z"/>
+                  </svg>
+                  <span class="font-medium text-indigo-300">IP:</span> ${session.ipAddress.split(',')[0]}
+                </p>
+                <p class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M17.657 16.657L13.414 12l4.243-4.243m-11.314 0L10.586 12 6.343 16.243"/>
+                  </svg>
+                  <span class="font-medium text-indigo-300">Location:</span> ${session.location.city || session.location.country || session.location.region || 'Unknown'}
+                </p>
+                <p class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M9 12h6m2 9H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2z"/>
+                  </svg>
+                  <span class="font-medium text-indigo-300">User Agent:</span> ${session.userAgent.split('(')[0]}
+                </p>
+              </div>
+              <p>
+                <button data-id="${session.id}" class=" rvk-s-btn px-6 py-2 bg-yellow-600 hover:bg-yellow-500 rounded-lg text-white font-semibold transition">Revoke</button>
+              </p>
+            </div>
+        `
+    }
+
+    for(let btn of document.querySelectorAll('.rvk-s-btn'))
+    {
+        btn.addEventListener('click', async () => {
+           auth_controller.revoke_session(btn.dataset.id)
+        })
+    }
 }

@@ -169,6 +169,28 @@ export class Auth
         }
     }
 
+    async list_sessions()
+    {
+        globals.spinner(true)
+        const sessions = await (await fetch("/api/auth/list-sessions", {
+            method: "GET"
+        })).json()
+        globals.spinner(false)
+
+        return sessions
+    }
+
+    async revoke_session(id)
+    {
+        globals.spinner(true)
+        await fetch(`/api/auth/revoke-session/${id}`, {
+            method: "GET"
+        })
+        globals.spinner(false)
+        
+        location.reload()
+    }
+
     async logout()
     {
         globals.spinner(true)

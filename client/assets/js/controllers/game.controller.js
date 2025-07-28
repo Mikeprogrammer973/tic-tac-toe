@@ -1,3 +1,4 @@
+import { globals } from "../utils/globals.js"
 
 export class Game
 {
@@ -16,5 +17,14 @@ export class Game
         } else {
             console.error("Error adding game log: ", result.message)
         }
+    }
+
+    async get_games_log()
+    {
+        globals.spinner(true)
+        const result = await (await fetch("/api/game/get-games-log")).json()
+        globals.spinner(false)
+
+        return result
     }
 }
