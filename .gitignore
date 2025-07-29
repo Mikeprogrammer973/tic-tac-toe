@@ -1,2 +1,15 @@
 node_modules
 .env
+
+MONGODB_URI = "mongodb+srv://antiquesclub007:inazuma15@portofolio.rmyk5uq.mongodb.net/tech_games?retryWrites=true&w=majority&appName=portofolio"
+
+PORT = 5001
+
+JWT_SECRET = "000M7A15@00mdp777"
+
+ENV_MODE = "dev"
+
+CLOUDINARY_NAME = "dhmprk6qe"
+CLOUDINARY_API_KEY = "535635862179659"
+CLOUDINARY_API_SECRET = "ln7h5fJpR5Ry8ei2h07JCn2OI4"
+CLOUDINARY_URL = "cloudinary://535635862179659:-ln7h5fJpR5Ry8ei2h07JCn2OI4@dhmprk6qe"
