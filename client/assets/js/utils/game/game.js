@@ -52,6 +52,8 @@ export class Game
                 this.turn = data.symbol === "X" ? player : opponent;
 
                 this.update_status(this.turn.mySelf ? "Your turn" : `${this.turn.name}'s turn`, this.turn.mySelf ? "your-turn" : "opponent-turn");
+
+                globals.chat.toggle(true)
             });
 
             this.socket.on("opponentMove", ({ index, symbol }) => {
@@ -144,6 +146,7 @@ export class Game
                     location.reload()
                 })
 
+                globals.chat.toggle(false)
             });
 
             // Desconectar socket ao sair
@@ -202,7 +205,7 @@ export class Game
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
         </svg>
-        <span id="status-message">Aguardando jogadores...</span>
+        <span id="status-message">Waiting for another player...</span>
         </div>`
         globals.game_board.appendChild(game_status)
 

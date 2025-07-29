@@ -4,13 +4,14 @@ import { Render } from "../utils/render.js"
 
 export default async function vs_pc_game()
 {
-    const game = new Game("pc")
+    let game = new Game("pc")
+    let level = 1
 
-    const pc = new PC('O', game, 1)
+    let pc = new PC('O', game, level)
 
     game.players.push(pc)
     game.reset_game()
-
+    
     new Render().notification(
         {
             title: "Level Selection",
@@ -18,8 +19,8 @@ export default async function vs_pc_game()
                 <div class="space-y-2 my-5">
                     <label for="level" class="block text-sm font-medium text-gray-300">Select a level:</label>
                     <select id="level" class="w-full px-4 py-2 text-gray-100 border rounded-lg focus:ring focus:ring-blue-300 outline-none">
-                        <option class="text-indigo-600" value="1">Easy</option>
-                        <option class="text-indigo-600" value="2" selected>Medium</option>
+                        <option class="text-indigo-600" value="1" selected>Easy</option>
+                        <option class="text-indigo-600" value="2">Medium</option>
                         <option class="text-indigo-600" value="3">Hard</option>
                     </select>
                 </div>
@@ -27,9 +28,10 @@ export default async function vs_pc_game()
             action: {
                 text: "Continue",
                 callback: () => {
-                    const game = new Game("pc")
+                    game = new Game("pc")
+                    level = Number(document.getElementById('level').value)
 
-                    const pc = new PC('O', game, document.getElementById('level').value)
+                    pc = new PC('O', game, level)
 
                     game.players.push(pc)
                     game.reset_game()

@@ -3,6 +3,7 @@ import { controllers } from '../controllers/index.js'
 import { format_xp } from './globals.js';
 import { Render } from './render.js';
 
+
 const render = new Render()
 
 export const home_auth_init = () => {
@@ -179,7 +180,7 @@ export const settings_auth_init = async () => {
 
     for(let session of sessions_list)
     {
-        active_sessions_container.innerHTML += `<div class="flex gap-4 items-center justify-between flex-wrap text-sm text-gray-200 bg-${session.current ? 'indigo-900' : 'black'} p-4 rounded-lg">
+        active_sessions_container.innerHTML += `<div class="flex gap-4 items-center justify-between flex-wrap text-sm text-gray-200 bg-${session.current ? 'green-900' : 'black'} p-4 rounded-lg">
             <div class="space-y-4">
                 <p class="flex items-center gap-2">
                   <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
