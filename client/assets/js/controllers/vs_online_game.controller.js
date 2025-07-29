@@ -9,6 +9,7 @@ export default async function vs_online_game()
     if(controllers.Auth.logged)
     {
         const game = new Game("online")
+        globals.chat.config()
     } else {
         new Render().notification({
             title: "Error",

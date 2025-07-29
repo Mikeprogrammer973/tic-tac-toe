@@ -180,6 +180,59 @@
         </div>
     </div>
 
+    <!-- Chat -->
+    <div id="chat" x-data="{chat_open : false}" class="hidden fixed bottom-4 right-4 z-40">
+        <div x-show="!chat_open" @click="chat_open = true" class="p-4 cursor-pointer bg-transparent hover:bg-white rounded-full flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-400 hover:text-indigo-600 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7 8h10M7 12h6m-6 8l-4-4H3a1 1 0 01-1-1V5a2 2 0 012-2h16a2 2 0 012 2v10a2 2 0 01-2 2H9l-2 3z" />
+            </svg>
+        </div>
+        <div x-show="chat_open" class="max-w-xl mx-auto rounded-2xl shadow-lg bg-gray-100 flex flex-col h-[500px]">
+
+            <div class="p-4 border-b text-lg font-semibold text-indigo-600 flex items-center justify-between gap-2">
+                <p class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 8h10M7 12h6m-6 8l-4-4H3a1 1 0 01-1-1V5a2 2 0 012-2h16a2 2 0 012 2v10a2 2 0 01-2 2H9l-2 3z" />
+                </svg>
+                <span>3T Chat</span>
+                </p>
+                <p>
+                <svg @click="chat_open = false" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 cursor-pointer text-gray-700 hover:text-red-700 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                </p>
+            </div>
+
+            <div id="chat-box-container" class="flex-1 overflow-y-auto p-4 space-y-2">
+                <div class="flex justify-start">
+                <div class="bg-gray-200 text-gray-800 rounded-xl p-3 max-w-[75%]">
+                    Oi! Pronto para jogar? 😄
+                </div>
+                </div>
+                <div class="flex justify-end">
+                <div class="bg-blue-500 text-white rounded-xl p-3 max-w-[75%]">
+                    Com certeza! Boa sorte! 🍀
+                </div>
+                </div>
+            </div>
+
+            <form id="chat-send-msg-form" class="p-3 border-t flex items-center grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                <button type="button" id="chat-emoji-btn" class="text-2xl hover:scale-150 transition">😊</button>
+                <input
+                id="chat-msg-input"
+                name="chat_msg"
+                type="text"
+                class="flex-1 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="Type here..."
+                required
+                />
+                <button type="submit" id="send-msg-btn" class="bg-blue-600 sm:col-span-2 md:col-span-1 hover:bg-blue-700 text-white px-4 py-2 rounded-xl">
+                    Send
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="//unpkg.com/alpinejs" defer></script>
     <script src="/socket.io/socket.io.js"></script>

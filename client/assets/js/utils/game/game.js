@@ -52,6 +52,8 @@ export class Game
                 this.turn = data.symbol === "X" ? player : opponent;
 
                 this.update_status(this.turn.mySelf ? "Your turn" : `${this.turn.name}'s turn`, this.turn.mySelf ? "your-turn" : "opponent-turn");
+
+                globals.chat.toggle(true)
             });
 
             this.socket.on("opponentMove", ({ index, symbol }) => {
@@ -144,6 +146,7 @@ export class Game
                     location.reload()
                 })
 
+                globals.chat.toggle(false)
             });
 
             // Desconectar socket ao sair

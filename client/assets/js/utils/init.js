@@ -2,7 +2,6 @@ import { Game } from '../controllers/game.controller.js';
 import { controllers } from '../controllers/index.js' 
 import { format_xp } from './globals.js';
 import { Render } from './render.js';
-import { EmojiButton } from 'https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.4/dist/index.js';
 
 
 const render = new Render()
@@ -43,24 +42,6 @@ export const home_auth_init = () => {
         const form_data = new FormData(e.currentTarget);
         new controllers.Auth().register(form_data)
     })
-}
-
-export const _teste_msg = () => {
-    const picker = new EmojiButton({
-        position: 'top-start',
-        zIndex: 50,
-        theme: 'dark'
-    });
-
-    const trigger = document.querySelector('#emoji-btn');
-    const input = document.querySelector('#chat-input');
-
-    picker.on('emoji', emoji => {
-        input.value += emoji.emoji;
-        input.focus();
-    });
-
-    trigger.addEventListener('click', () => picker.togglePicker(trigger));
 }
 
 export const profile_auth_init = async () => {
