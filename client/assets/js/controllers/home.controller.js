@@ -1,5 +1,5 @@
 import { globals } from "../utils/globals.js"
-import { home_auth_init } from "../utils/init.js"
+import { home_auth_init, _teste_msg } from "../utils/init.js"
 import { Render } from "../utils/render.js"
 import { controllers } from "./index.js"
 
@@ -7,7 +7,7 @@ export default async function home()
 {
     let page_dir = "/pages/home/welcome.html" 
 
-    let util = () => {}
+    let util = _teste_msg
     
     if(!controllers.Auth.logged)
     {
